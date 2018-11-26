@@ -9,10 +9,8 @@ def main():
 
   menu = Menu(screen)
 
-  for i in range(10):
-    menu.drawRect(50 * i, 100)
-    print(i)
-    pygame.time.delay(300)
+  while not menu.isGameRunning:
+    menu.update()
 
 if __name__ == '__main__':
   main()
