@@ -1,9 +1,12 @@
 import sys
 import pygame
 
+from src.utils.displayText import displayText
+
 class Menu:
-  def __init__(self, screen):
+  def __init__(self, screen, colors):
     self.screen = screen
+    self.colors = colors
     self.activeOption = 0
     self.isGameRunning = False
 
@@ -17,31 +20,30 @@ class Menu:
     self.screen.fill((22, 22, 22))
 
   def drawLogo(self):
-    print("Rectov")
-    # displayText "Rectov"
+    displayText(self.screen, text="Rectov", x=360, y=120, fontSize=128)
 
   def drawMenuDots(self):
-    firstDot = pygame.Rect(270, 380, 20, 20)
-    secondDot = pygame.Rect(270, 420, 20, 20)
+    firstDot = pygame.Rect(500, 383, 20, 20)
+    secondDot = pygame.Rect(500, 423, 20, 20)
     if self.activeOption == 0:
-      pygame.draw.rect(self.screen, (255, 255, 255), firstDot)
-      pygame.draw.rect(self.screen, (80, 80, 80), secondDot)
+      pygame.draw.rect(self.screen, self.colors["white"], firstDot)
+      pygame.draw.rect(self.screen, self.colors["grey"], secondDot)
     elif self.activeOption == 1:
-      pygame.draw.rect(self.screen, (80, 80, 80), firstDot)
-      pygame.draw.rect(self.screen, (255, 255, 255), secondDot)
+      pygame.draw.rect(self.screen, self.colors["grey"], firstDot)
+      pygame.draw.rect(self.screen, self.colors["white"], secondDot)
 
   def drawMenu(self):
     self.drawMenuDots()
-    # displayText "KAROL KAPLANEK"
+    displayText(self.screen, text="KAROL KAPLANEK", x=960, y=690)
+    inactiveColor = self.colors["grey"]
+    activeColor = self.colors["white"]
 
     if self.activeOption == 0:
-      print("START active")
-      # displayText "START THE GAME" (ACTIVE - white color)
-      # displayText "EXIT" (grey color)
+      displayText(self.screen, text="START", x=560, y=380, color=activeColor, fontSize=36)
+      displayText(self.screen, text="EXIT", x=560, y=420, color=inactiveColor, fontSize=36)
     elif self.activeOption == 1:
-      print("EXIT active")
-      # displayText "START THE GAME" (grey color)
-      # displayText "EXIT" (ACTIVE - white color)
+      displayText(self.screen, text="START", x=560, y=380, color=inactiveColor, fontSize=36)
+      displayText(self.screen, text="EXIT", x=560, y=420, color=activeColor, fontSize=36)  
 
   def checkInput(self):
     events = pygame.event.get()
