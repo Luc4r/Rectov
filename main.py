@@ -22,7 +22,7 @@ def main():
   for x in range(32):
     Wall(screen, colors, walls, x, y=17)
 
-  player = Player(screen, colors)
+  player = Player(screen, walls, colors)
 
   clock = pygame.time.Clock()
   running = True
