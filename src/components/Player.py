@@ -13,31 +13,27 @@ class Player:
     self.velocityY = 1
     self.mass = 0.5
 
-  def moveUp(self):
-    self.rect.y -= self.velocityY
-
-  def moveDown(self):
-    self.rect.y += self.velocityY
-
-  def moveRight(self):
-    self.rect.x += self.velocityX
-
-  def moveLeft(self):
-    self.rect.x -= self.velocityX
-
-  def jump(self):
+  def handleJump(self):
     if self.isJumping:
       self.isHoldingJumpKey = True
     else:
       self.isJumping = True
       self.velocityY = 8
 
+  def handleMoveRight(self):
+    self.rect.x += self.velocityX
+    self.checkCollision("right")
+
+  def handleMoveLeft(self):
+    self.rect.x -= self.velocityX
+    self.checkCollision("left")
+
   def gravitySimulation(self):
     F = -(0.1 * self.mass * (self.velocityY ** 2))
-
-    self.rect.y = self.rect.y - F
-    self.velocityY = self.velocityY + 0.5
-
+    # Change position and velocity
+    self.rect.y -= F
+    self.velocityY += 0.5
+    # On floor hit - set velocity to default value
     if self.checkCollision("down"):
       self.velocityY = 1
 
@@ -46,43 +42,21 @@ class Player:
       F = (0.5 * self.mass * (self.velocityY ** 2))
     else:
       F = -(0.5 * self.mass * (self.velocityY ** 2))
-
     # Change position
-    self.rect.y = self.rect.y - F
-
+    self.rect.y -= F
     # Change velocity (when user is holding jump button, player lose velocity slower)
     if self.isHoldingJumpKey:
-      self.velocityY = self.velocityY - 0.3
+      self.velocityY -= 0.25
       self.isHoldingJumpKey = False
     else:
-      self.velocityY = self.velocityY - 0.5
-
+      self.velocityY -= 0.45
     # If something is in a way, start falling
     if self.velocityY > 0 and self.checkCollision("up"):
       self.velocityY = 0
-
     # If ground is reached, reset variables
     if self.checkCollision("down"):
       self.isJumping = False
       self.velocityY = 1
-
-  def checkCollision(self, direction):
-    floorLevel = 680
-    for wall in self.walls:
-      if self.rect.colliderect(wall.rect):
-        # Hit the bottom side of the wall + ignore when floor
-        if direction == "up" and wall.rect.top < floorLevel:
-          self.rect.top = wall.rect.bottom
-        # Hit the left side of the wall
-        if direction == "right":
-          self.rect.right = wall.rect.left
-        # Hit the upper side of the wall
-        if direction == "down":
-          self.rect.bottom = wall.rect.top
-        # Hit the right side of the wall
-        if direction == "left":
-          self.rect.left = wall.rect.right
-        return True
 
   def update(self):
     self.checkInput()
@@ -94,13 +68,29 @@ class Player:
   def checkInput(self):
     key = pygame.key.get_pressed()
     if key[pygame.K_UP]:
-      self.jump()
-    if key[pygame.K_DOWN]:
-      self.moveDown()
+      self.handleJump()
     if key[pygame.K_LEFT]:
-      self.moveLeft()
+      self.handleMoveLeft()
     if key[pygame.K_RIGHT]:
-      self.moveRight()
+      self.handleMoveRight()
+
+  def checkCollision(self, direction):
+    for wall in self.walls:
+      if self.rect.colliderect(wall.rect):
+        # Hit the bottom side of the wall
+        if direction == "up":
+          self.rect.top = wall.rect.bottom
+        # Hit the left side of the wall
+        if direction == "right":
+          self.rect.right = wall.rect.left
+        # Hit the upper side of the wall
+        if direction == "down":
+          self.rect.bottom = wall.rect.top
+        # Hit the right side of the wall
+        if direction == "left":
+          self.rect.left = wall.rect.right
+        return True
+    return False
 
   def displayPlayer(self):
     pygame.draw.rect(self.screen, self.colors["red"], self.rect)
