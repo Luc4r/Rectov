@@ -13,3 +13,14 @@ fonts = {
 def displayText(screen, text, x, y, color=(255, 255, 255), fontSize=24):
   textToDisplay = fonts[fontSize].render(text, 1, color)
   screen.blit(textToDisplay, (x, y))
+
+def displayTextCentered(screen, text, y, color=(255, 255, 255), fontSize=24):
+  textToDisplay = fonts[fontSize].render(text, 1, color)
+  centerX = getCenterX(textToDisplay)
+  screen.blit(textToDisplay, (centerX, y))
+
+def getCenterX(text):
+  screenWidth = 1280
+  textWidth = text.get_width()
+  centerX = screenWidth // 2 - textWidth // 2
+  return centerX
