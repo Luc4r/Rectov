@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from src.utils.displayText import displayText
+from src.utils.displayText import displayText, displayTextCentered
 
 class Menu:
   def __init__(self, screen, colors):
@@ -20,7 +20,7 @@ class Menu:
     self.screen.fill((22, 22, 22))
 
   def drawLogo(self):
-    displayText(self.screen, text="Rectov", x=360, y=120, fontSize=128)
+    displayTextCentered(self.screen, text="Rectov", y=120, fontSize=128)
 
   def drawMenuDots(self):
     firstDot = pygame.Rect(500, 383, 20, 20)
