@@ -6,6 +6,7 @@ from src.components.Wall import Wall
 from src.components.Player import Player
 
 from src.utils.getDataFromJSON import getDataFromJSON
+from src.utils.simpleFade import fadeIn, fadeOut
 
 colors = getDataFromJSON("src/config/colors.json")
 
@@ -13,11 +14,19 @@ def main():
   pygame.init()
   pygame.display.set_caption("Rectov")
   screen = pygame.display.set_mode((1280, 720))
+  screen.fill((22, 22, 22))
+  # Prepare surface for simple fade transition
+  transitionScreen = pygame.Surface((1280, 720))
+  transitionScreen.fill((22, 22, 22))
 
   menu = Menu(screen, colors)
 
+  fadeIn(screen, transitionScreen, backgroundFunction=menu.update)
+
   while not menu.isGameRunning:
     menu.update()
+
+  fadeOut(screen, transitionScreen, backgroundFunction=menu.update)
 
   walls = []
   for x in range(32):
@@ -30,16 +39,16 @@ def main():
   Wall(screen, colors, walls, x=27, y=16)
 
   player = Player(screen, walls, colors)
-  loadingScreen = LoadingScreen(screen, colors, "Level 1", "000000")
+  loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", "000000")
 
-  # Draw loading screen for 2s
-  loadingScreen.drawLoadingScreen()
-  pygame.time.wait(2000)
+  fadeIn(screen, transitionScreen, backgroundFunction=loadingScreen.drawLoadingScreen)
+  pygame.time.wait(1000)
+  fadeOut(screen, transitionScreen, backgroundFunction=loadingScreen.drawLoadingScreen)
 
   clock = pygame.time.Clock()
   running = True
   while running:
-  	# Max fps
+    # Max fps
     clock.tick(60)
     # Special keys events
     events = pygame.event.get()
@@ -57,7 +66,7 @@ def main():
     # Draw walls
     for wall in walls:
       wall.displayWall()
-    # Update screen
+
     pygame.display.update()
 
 if __name__ == '__main__':

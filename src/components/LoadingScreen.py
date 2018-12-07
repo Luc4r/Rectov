@@ -21,4 +21,3 @@ class LoadingScreen:
     self.screen.fill((22, 22, 22))
     self.drawLevelName()
     self.drawPlayerScore()
-    pygame.display.update()
