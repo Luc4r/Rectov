@@ -7,6 +7,7 @@ class Player:
     self.colors = colors
 
     self.rect = pygame.Rect(60, 640, 40, 40)
+    self.color = colors["red"]
     self.isJumping = False
     self.isHoldingJumpKey = False
     self.velocityX = 6
@@ -27,6 +28,9 @@ class Player:
   def handleMoveLeft(self):
     self.rect.x -= self.velocityX
     self.checkCollision("left")
+
+  def handleChangeColor(self, newColor):
+    self.color = self.colors[newColor];
 
   def gravitySimulation(self):
     F = -(0.1 * self.mass * (self.velocityY ** 2))
@@ -73,6 +77,12 @@ class Player:
       self.handleMoveLeft()
     if key[pygame.K_RIGHT]:
       self.handleMoveRight()
+    if key[pygame.K_1]:
+      self.handleChangeColor("red")
+    if key[pygame.K_2]:
+      self.handleChangeColor("green")
+    if key[pygame.K_3]:
+      self.handleChangeColor("blue")
 
   def checkCollision(self, direction):
     for wall in self.walls:
@@ -93,4 +103,4 @@ class Player:
     return False
 
   def displayPlayer(self):
-    pygame.draw.rect(self.screen, self.colors["red"], self.rect)
+    pygame.draw.rect(self.screen, self.color, self.rect)
