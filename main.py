@@ -1,12 +1,12 @@
 import pygame
 
 from src.components.Menu import Menu
+from src.components.TransitionSurface import TransitionSurface
 from src.components.LoadingScreen import LoadingScreen
 from src.components.Wall import Wall
 from src.components.Player import Player
 
 from src.utils.getDataFromJSON import getDataFromJSON
-from src.utils.simpleFade import fadeIn, fadeOut
 
 colors = getDataFromJSON("src/config/colors.json")
 
@@ -14,19 +14,17 @@ def main():
   pygame.init()
   pygame.display.set_caption("Rectov")
   screen = pygame.display.set_mode((1280, 720))
-  screen.fill((22, 22, 22))
-  # Prepare surface for simple fade transition
-  transitionScreen = pygame.Surface((1280, 720))
-  transitionScreen.fill((22, 22, 22))
+  screen.fill(colors["background"])
 
+  transition = TransitionSurface(screen, colors["background"])
   menu = Menu(screen, colors)
 
-  fadeIn(screen, transitionScreen, backgroundFunction=menu.update)
+  transition.fadeIn(backgroundFunction=menu.update)
 
   while not menu.isGameRunning:
     menu.update()
 
-  fadeOut(screen, transitionScreen, backgroundFunction=menu.update)
+  transition.fadeOut(backgroundFunction=menu.update)
 
   walls = []
   for x in range(32):
@@ -41,9 +39,9 @@ def main():
   player = Player(screen, walls, colors)
   loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", "000000")
 
-  fadeIn(screen, transitionScreen, backgroundFunction=loadingScreen.drawLoadingScreen)
+  transition.fadeIn(backgroundFunction=loadingScreen.drawLoadingScreen)
   pygame.time.wait(1000)
-  fadeOut(screen, transitionScreen, backgroundFunction=loadingScreen.drawLoadingScreen)
+  transition.fadeOut(backgroundFunction=loadingScreen.drawLoadingScreen)
 
   clock = pygame.time.Clock()
   running = True
@@ -60,7 +58,7 @@ def main():
     # Update player if key pressed
     player.update()
     # Draw background
-    screen.fill((22, 22, 22))
+    screen.fill(colors["background"])
     # Draw player
     player.displayPlayer()
     # Draw walls

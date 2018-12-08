@@ -17,7 +17,7 @@ class Menu:
     self.drawMenu()
 
   def drawMenuBackground(self):
-    self.screen.fill((22, 22, 22))
+    self.screen.fill(self.colors["background"])
 
   def drawLogo(self):
     displayTextCentered(self.screen, text="Rectov", y=120, fontSize=128)
