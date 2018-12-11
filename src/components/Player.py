@@ -11,6 +11,7 @@ class Player:
 
     self.rect = pygame.Rect(60, 640, 30, 30)
     self.color = colors["red"]
+    self.isFalling = False
     self.isJumping = False
     self.isHoldingJumpKey = False
     self.velocityX = 5
@@ -20,7 +21,7 @@ class Player:
   def handleJump(self):
     if self.isJumping:
       self.isHoldingJumpKey = True
-    else:
+    elif not self.isFalling:
       self.isJumping = True
       self.velocityY = 8
 
@@ -44,6 +45,9 @@ class Player:
     # On floor hit - set velocity to default value
     if self.checkCollision("down"):
       self.velocityY = 5
+      self.isFalling = False
+    else:
+      self.isFalling = True
 
   def jumpSimulation(self):
     if self.velocityY > 0:
@@ -128,5 +132,6 @@ class Player:
 
   def displayPlayer(self):
     colorRect = pygame.Rect(self.rect.left + 1, self.rect.top + 1, 28, 28)
-    pygame.draw.rect(self.screen, self.colors["black"], self.rect)
+    borderColor = [200 if value == 255 else 0 for value in self.color]
+    pygame.draw.rect(self.screen, borderColor, self.rect)
     pygame.draw.rect(self.screen, self.color, colorRect)
