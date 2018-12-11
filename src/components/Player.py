@@ -33,7 +33,8 @@ class Player:
     self.checkCollision("left")
 
   def handleChangeColor(self, newColor):
-    self.color = self.colors[newColor]
+    if not self.isCollisionDetected():
+      self.color = self.colors[newColor]
 
   def gravitySimulation(self):
     F = -(0.1 * self.mass * (self.velocityY ** 2))
@@ -66,7 +67,6 @@ class Player:
       self.velocityY = 5
 
   def update(self):
-
     self.checkInput()
     if self.isJumping:
       self.jumpSimulation()
@@ -89,28 +89,33 @@ class Player:
     if key[pygame.K_3]:
       self.handleChangeColor("blue")
 
-  def checkCollision(self, direction):
+  def positionCheckOnCollision(self, collisionRect, moveDirection):
+    if moveDirection == "up":     # Hit the right side of object
+      self.rect.top = collisionRect.bottom
+    if moveDirection == "right":  # Hit the right side of object
+      self.rect.right = collisionRect.left
+    if moveDirection == "down":   # Hit the right side of object
+      self.rect.bottom = collisionRect.top
+    if moveDirection == "left":   # Hit the right side of object
+      self.rect.left = collisionRect.right
+
+  def isCollisionDetected(self):
+    for wall in self.walls:
+      if self.rect.colliderect(wall.rect):
+        return True
+    for platform in self.platforms:
+      if self.rect.colliderect(platform.rect):
+        return True
+    return False
+
+  def checkCollision(self, moveDirection):
     for wall in self.walls:
       if self.rect.colliderect(wall.rect) and (self.color == wall.color or wall.color == self.colors["white"]):
-        if direction == "up":     # Hit the bottom side of the wall
-          self.rect.top = wall.rect.bottom
-        if direction == "right":  # Hit the left side of the wall
-          self.rect.right = wall.rect.left
-        if direction == "down":   # Hit the upper side of the wall
-          self.rect.bottom = wall.rect.top
-        if direction == "left":   # Hit the right side of the wall
-          self.rect.left = wall.rect.right
+        self.positionCheckOnCollision(wall.rect, moveDirection)
         return True
     for platform in self.platforms:
       if self.rect.colliderect(platform.rect) and (self.color != platform.color or platform.color == self.colors["white"]):
-        if direction == "up":     # Hit the bottom side of the platform
-          self.rect.top = platform.rect.bottom
-        if direction == "right":  # Hit the left side of the platform
-          self.rect.right = platform.rect.left
-        if direction == "down":   # Hit the upper side of the platform
-          self.rect.bottom = platform.rect.top
-        if direction == "left":   # Hit the right side of the platform
-          self.rect.left = platform.rect.right
+        self.positionCheckOnCollision(platform.rect, moveDirection)
         return True
     return False
 
