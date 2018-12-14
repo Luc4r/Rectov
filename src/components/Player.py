@@ -1,5 +1,7 @@
 import pygame
 
+from src.utils.collideRectCircle import collideRectCircle
+
 class Player:
   def __init__(self, screen, walls, platforms, coins, colors, playerScore):
     self.screen = screen
@@ -125,7 +127,7 @@ class Player:
 
   def checkCoinPickup(self):
     for coin in self.coins:
-      if self.rect.colliderect(coin.rect):
+      if collideRectCircle(self.rect, coin.position, coin.radius):
         indexOfPickedCoin = self.coins.index(coin)
         self.coins.pop(indexOfPickedCoin)
         self.playerScore[0] += 100

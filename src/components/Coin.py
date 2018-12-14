@@ -3,14 +3,15 @@ import pygame
 class Coin:
   def __init__(self, screen, coins, x, y):
     self.screen = screen
-    self.color = [255, 0, 0]
 
-    self.rect = pygame.Rect((x * 40) + 15, (y * 40) + 15, 10, 10)
+    self.position = ((x * 40) + 20, (y * 40) + 20)
+    self.radius = 6
+    self.color = [255, 0, 0]
     self.nextColor = [0, 255, 0]
     coins.append(self)
 
   def drawCoin(self):
-    pygame.draw.rect(self.screen, self.color, self.rect)
+    pygame.draw.circle(self.screen, self.color, self.position, self.radius)
     self.simpleRGBAnimation()
 
   def simpleRGBAnimation(self):
