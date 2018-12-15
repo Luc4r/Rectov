@@ -20,25 +20,23 @@ def main():
   transition = TransitionSurface(screen, colors["background"])
   menu = Menu(screen, colors)
 
-  transition.fadeIn(backgroundFunction=menu.update)
+  transition.fadeIn(backgroundFunction=menu.drawMenu)
 
   while not menu.isGameRunning:
-    menu.update()
+    menu.drawMenu()
 
-  transition.fadeOut(backgroundFunction=menu.update)
+  transition.fadeOut(backgroundFunction=menu.drawMenu)
 
   walls = []
   platforms = []
   coins = []
   playerScore = [0] # Mutable object (list) - used for easy update every object using it
   level = Level(screen, walls, platforms, coins, colors, levelName="lvl-1")
-  player = Player(screen, walls, platforms, coins, colors, playerScore)
+  player = Player(screen, walls, platforms, coins, colors, playerScore, main)
   loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", playerScore)
   ui = UserInterface(screen, colors, "1 - Test Area", playerScore)
 
-  level.buildWalls()
-  level.buildPlatforms()
-  level.buildCoins()
+  level.buildLevel()
 
   transition.fadeIn(backgroundFunction=loadingScreen.drawLoadingScreen)
   pygame.time.wait(1000)
@@ -50,19 +48,12 @@ def main():
   while running:
     # Max fps
     clock.tick(60)
-    # Special keys events
-    events = pygame.event.get()
-    for event in events:
-      if event.type == pygame.QUIT:
-        main()
-      if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-        main()
-    # Update player if key pressed
+    # Update player
     player.update()
     # Draw game elements
     screen.fill(colors["background"])
     level.drawLevel()
-    player.displayPlayer()
+    player.drawPlayer()
     ui.drawUI()
     # Update screen
     pygame.display.update()

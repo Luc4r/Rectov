@@ -29,10 +29,15 @@ class Level:
     for coinData in self.levelData["coins"]:
       Coin(self.screen, self.coins, coinData["x"], coinData["y"])
 
+  def buildLevel(self):
+    self.buildWalls()
+    self.buildPlatforms()
+    self.buildCoins()
+
   def drawLevel(self):
     for wall in self.walls:
-      wall.displayWall()
+      wall.drawWall()
     for platform in self.platforms:
-      platform.displayWall()
+      platform.drawWall()
     for coin in self.coins:
       coin.drawCoin()

@@ -8,5 +8,5 @@ class Wall:
     self.rect = pygame.Rect(x * 40, y * 40, 40, 40)
     walls.append(self)
 
-  def displayWall(self):
+  def drawWall(self):
     pygame.draw.rect(self.screen, self.color, self.rect)

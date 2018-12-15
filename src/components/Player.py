@@ -3,13 +3,14 @@ import pygame
 from src.utils.collideRectCircle import collideRectCircle
 
 class Player:
-  def __init__(self, screen, walls, platforms, coins, colors, playerScore):
+  def __init__(self, screen, walls, platforms, coins, colors, playerScore, mainFunction):
     self.screen = screen
     self.walls = walls
     self.platforms = platforms
     self.coins = coins
     self.colors = colors
     self.playerScore = playerScore
+    self.backToMainMenu = mainFunction
 
     self.rect = pygame.Rect(60, 640, 30, 30)
     self.color = colors["red"]
@@ -72,29 +73,6 @@ class Player:
       self.isJumping = False
       self.velocityY = 5
 
-  def update(self):
-    self.checkInput()
-    if self.isJumping:
-      self.jumpSimulation()
-    else:
-      self.gravitySimulation()
-    self.checkCoinPickup()
-
-  def checkInput(self):
-    key = pygame.key.get_pressed()
-    if key[pygame.K_UP] or key[pygame.K_w] or key[pygame.K_SPACE]:
-      self.handleJump()
-    if key[pygame.K_LEFT] or key[pygame.K_a]:
-      self.handleMoveLeft()
-    if key[pygame.K_RIGHT] or key[pygame.K_d]:
-      self.handleMoveRight()
-    if key[pygame.K_1]:
-      self.handleChangeColor("red")
-    if key[pygame.K_2]:
-      self.handleChangeColor("green")
-    if key[pygame.K_3]:
-      self.handleChangeColor("blue")
-
   def positionCheckOnCollision(self, collisionRect, moveDirection):
     if moveDirection == "up":     # Hit the right side of object
       self.rect.top = collisionRect.bottom
@@ -132,8 +110,37 @@ class Player:
         self.coins.pop(indexOfPickedCoin)
         self.playerScore[0] += 100
 
-  def displayPlayer(self):
-    colorRect = pygame.Rect(self.rect.left + 1, self.rect.top + 1, 28, 28)
+  def checkInput(self):
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        self.backToMainMenu()
+
+    key = pygame.key.get_pressed()
+    if key[pygame.K_UP] or key[pygame.K_w] or key[pygame.K_SPACE]:
+      self.handleJump()
+    if key[pygame.K_LEFT] or key[pygame.K_a]:
+      self.handleMoveLeft()
+    if key[pygame.K_RIGHT] or key[pygame.K_d]:
+      self.handleMoveRight()
+    if key[pygame.K_1]:
+      self.handleChangeColor("red")
+    if key[pygame.K_2]:
+      self.handleChangeColor("green")
+    if key[pygame.K_3]:
+      self.handleChangeColor("blue")
+    if key[pygame.K_ESCAPE]:
+      self.backToMainMenu()
+
+  def drawPlayer(self):
+    colorRect = pygame.Rect(self.rect.left + 2, self.rect.top + 2, 26, 26)
     borderColor = [200 if value == 255 else 0 for value in self.color]
     pygame.draw.rect(self.screen, borderColor, self.rect)
     pygame.draw.rect(self.screen, self.color, colorRect)
+
+  def update(self):
+    self.checkInput()
+    if self.isJumping:
+      self.jumpSimulation()
+    else:
+      self.gravitySimulation()
+    self.checkCoinPickup()

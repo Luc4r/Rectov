@@ -10,10 +10,6 @@ class Coin:
     self.nextColor = [0, 255, 0]
     coins.append(self)
 
-  def drawCoin(self):
-    pygame.draw.circle(self.screen, self.color, self.position, self.radius)
-    self.simpleRGBAnimation()
-
   def simpleRGBAnimation(self):
     if self.color != self.nextColor:
       positionToIncrement = self.nextColor.index(255)
@@ -31,3 +27,7 @@ class Coin:
 
       self.nextColor[positionOfNextMaxValue] = 255
       self.nextColor[positionOfMaxValue] = 0
+
+  def drawCoin(self):
+    pygame.draw.circle(self.screen, self.color, self.position, self.radius)
+    self.simpleRGBAnimation()

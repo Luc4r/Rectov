@@ -10,7 +10,7 @@ class TransitionSurface:
     alpha = 255
     self.transitionScreen.set_alpha(alpha)
     while alpha > 0:
-      # Display background
+      # Draw background
       backgroundFunction()
       # Change alpha of the transition surface
       alpha -= 2
@@ -23,7 +23,7 @@ class TransitionSurface:
     alpha = 0
     self.transitionScreen.set_alpha(alpha)
     while alpha < 255:
-      # Display background
+      # Draw background
       backgroundFunction()
       # Change alpha of the transition surface
       alpha += 2
