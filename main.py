@@ -1,3 +1,4 @@
+import time
 import pygame
 
 from src.components.Menu import Menu
@@ -41,7 +42,14 @@ def main():
   level.buildLevel()
 
   transition.fadeIn(backgroundFunction=loadingScreen.drawLoadingScreen)
-  pygame.time.wait(1000)
+  # Do a one second break before transition
+  timeEnd = time.time() + 1
+  while time.time() < timeEnd:
+    # Max fps
+    clock.tick(60)
+    # Draw loading screen (coin animation)
+    loadingScreen.drawLoadingScreen()
+    pygame.display.update()
   transition.fadeOut(backgroundFunction=loadingScreen.drawLoadingScreen)
   transition.fadeIn(backgroundFunction=level.drawLevel)
 
