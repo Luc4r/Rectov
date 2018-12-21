@@ -62,7 +62,6 @@ class Menu:
           elif self.activeOption == 1:
             pygame.quit()
             sys.exit()
-    pygame.display.update()
 
   def drawMenu(self):
     self.checkInput()

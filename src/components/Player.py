@@ -3,14 +3,13 @@ import pygame
 from src.utils.collideRectCircle import collideRectCircle
 
 class Player:
-  def __init__(self, screen, walls, platforms, coins, colors, playerScore, mainFunction):
+  def __init__(self, screen, walls, platforms, coins, colors, playerScore):
     self.screen = screen
     self.walls = walls
     self.platforms = platforms
     self.coins = coins
     self.colors = colors
     self.playerScore = playerScore
-    self.backToMainMenu = mainFunction
 
     self.rect = pygame.Rect(60, 640, 30, 30)
     self.color = colors["red"]
@@ -111,10 +110,6 @@ class Player:
         self.playerScore[0] += 100
 
   def checkInput(self):
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-        self.backToMainMenu()
-
     key = pygame.key.get_pressed()
     if key[pygame.K_UP] or key[pygame.K_w] or key[pygame.K_SPACE]:
       self.handleJump()
