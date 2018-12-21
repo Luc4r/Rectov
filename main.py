@@ -5,6 +5,7 @@ from src.components.TransitionSurface import TransitionSurface
 from src.components.LoadingScreen import LoadingScreen
 from src.components.UserInterface import UserInterface
 from src.components.Player import Player
+from src.components.Enemy import Enemy
 from src.components.Level import Level
 
 from src.utils.getDataFromJSON import getDataFromJSON
@@ -33,6 +34,7 @@ def main():
   playerScore = [0] # Mutable object (list) - used for easy update every object using it
   level = Level(screen, walls, platforms, coins, colors, levelName="lvl-1")
   player = Player(screen, walls, platforms, coins, colors, playerScore, main)
+  enemy = Enemy(screen, walls, platforms, player, colors, playerScore)
   loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", playerScore)
   ui = UserInterface(screen, colors, "1 - Test Area", playerScore)
 
@@ -52,6 +54,7 @@ def main():
     player.update()
     # Draw game elements
     screen.fill(colors["background"])
+    enemy.update()
     level.drawLevel()
     player.drawPlayer()
     ui.drawUI()
