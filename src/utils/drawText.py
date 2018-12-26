@@ -6,6 +6,7 @@ fonts = {
   14: pygame.font.Font("src/font/Chintzy.ttf", 14),
   24: pygame.font.Font("src/font/Chintzy.ttf", 24),
   36: pygame.font.Font("src/font/Chintzy.ttf", 36),
+  64: pygame.font.Font("src/font/Chintzy.ttf", 64),
   96: pygame.font.Font("src/font/Chintzy.ttf", 96),
   128: pygame.font.Font("src/font/Chintzy.ttf", 128)
 }

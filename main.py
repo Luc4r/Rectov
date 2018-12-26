@@ -35,7 +35,7 @@ def main():
   playerScore = [0] # Mutable object (list) - used for easy update every object using it
   level = Level(screen, walls, platforms, coins, colors, levelName="lvl-1")
   player = Player(screen, walls, platforms, coins, colors, playerScore, main)
-  enemy = Enemy(screen, walls, platforms, player, colors, playerScore)
+  enemy = Enemy(screen, walls, platforms, player, colors, isGameRunning)
   loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", playerScore)
   ui = UserInterface(screen, colors, "1 - Test Area", playerScore)
 
@@ -62,7 +62,7 @@ def main():
     player.update()
     # Draw game elements
     screen.fill(colors["background"])
-    enemy.update()
+    enemy.drawEnemy()
     level.drawLevel()
     player.drawPlayer()
     ui.drawUI()
