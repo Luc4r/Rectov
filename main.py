@@ -29,6 +29,7 @@ def main():
 
   while not menu.isGameRunning:
     menu.drawMenu()
+    # Update screen
     pygame.display.update()
 
   transition.fadeOut(backgroundFunction=menu.drawMenu)
@@ -36,12 +37,13 @@ def main():
   walls = []
   platforms = []
   coins = []
+  finish = []
   isGameRunning = [True]
   isGamePaused = [False]
   playerScore = [0]
 
-  level = Level(screen, walls, platforms, coins, colors, levelName="lvl-1")
-  player = Player(screen, walls, platforms, coins, colors, playerScore)
+  level = Level(screen, walls, platforms, coins, finish, colors, levelName="lvl-1")
+  player = Player(screen, walls, platforms, coins, finish, colors, playerScore)
   enemy = Enemy(screen, walls, platforms, player, colors, isGameRunning)
   loadingScreen = LoadingScreen(screen, colors, "1 - Test Area", playerScore)
   deathScreen = DeathScreen(screen, colors, playerScore, confirmTransition=transition.fadeOut, backToMainMenu=main)
@@ -58,11 +60,12 @@ def main():
     clock.tick(60)
     # Draw loading screen (coin animation)
     loadingScreen.drawLoadingScreen()
+    # Update screen
     pygame.display.update()
   transition.fadeOut(backgroundFunction=loadingScreen.drawLoadingScreen)
   transition.fadeIn(backgroundFunction=level.drawLevel)
 
-  while isGameRunning[0]:
+  while isGameRunning[0] and not player.finishAnimationEnded:
     # Max fps
     clock.tick(60)
     # Check special events
@@ -71,7 +74,7 @@ def main():
         transition.fadeOut()
         main()
       if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_p:
+        if event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
           isGamePaused[0] = True
           while isGamePaused[0]:
             # Max fps
