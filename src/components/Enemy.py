@@ -12,7 +12,7 @@ class Enemy:
     self.deathHandler = isGameRunning
 
     self.transparentSurface = pygame.Surface((1280, 720)).convert_alpha()
-    self.rect = pygame.Rect(760, 40, 40, 40)
+    self.rect = pygame.Rect(25 * 40, 14 * 40, 40, 40)
     self.rangeColor = [155, 100, 155, 50]
     self.rangeRadius = 160
     self.isFalling = False
@@ -58,7 +58,7 @@ class Enemy:
     minColorAlpha = 50
     if collideRectCircle(self.player.rect, (self.rect.left + 20, self.rect.top + 20), self.rangeRadius):
       if rangeColor[3] + 2 < maxColorAlpha:
-        self.rangeColor[3] += 2
+        self.rangeColor[3] += 4
       else:
         self.deathHandler[0] = False
     elif rangeColor[3] - 2 > minColorAlpha:

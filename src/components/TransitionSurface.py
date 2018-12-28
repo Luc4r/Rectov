@@ -4,6 +4,7 @@ class TransitionSurface:
   def __init__(self, screen, clock, fillColor):
     self.screen = screen
     self.clock = clock
+
     self.transitionScreen = pygame.Surface((1280, 720))
     self.transitionScreen.fill(fillColor)
 

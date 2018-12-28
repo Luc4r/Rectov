@@ -13,11 +13,11 @@ class UserInterface:
     self.coinIcon = Coin(screen, [], x=25, y=0)
 
   def drawLevelName(self):
-    drawText(self.screen, text=self.levelName, x=100, y=10)
+    drawText(self.screen, text=self.levelName, x=100, y=10, color=self.colors["black"])
 
   def drawPlayerScore(self):
     self.coinIcon.drawCoin()
-    drawText(self.screen, text="{:06d}".format(self.playerScore[0]), x=1030, y=10)
+    drawText(self.screen, text="{:06d}".format(self.playerScore[0]), x=1030, y=10, color=self.colors["black"])
 
   def drawUI(self):
     self.drawLevelName()
