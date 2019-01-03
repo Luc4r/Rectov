@@ -1,14 +1,14 @@
 import pygame
 
 class Coin:
-  def __init__(self, screen, coins, x, y):
+  def __init__(self, screen, x, y):
+    # Passed attributes
     self.screen = screen
-
+    # Class attributes
     self.position = ((x * 40) + 20, (y * 40) + 20)
     self.radius = 6
     self.color = [255, 0, 0]
     self.nextColor = [0, 255, 0]
-    coins.append(self)
 
   def simpleRGBAnimation(self):
     if self.color != self.nextColor:
@@ -28,6 +28,6 @@ class Coin:
       self.nextColor[positionOfNextMaxValue] = 255
       self.nextColor[positionOfMaxValue] = 0
 
-  def drawCoin(self):
+  def draw(self):
     pygame.draw.circle(self.screen, self.color, self.position, self.radius)
     self.simpleRGBAnimation()

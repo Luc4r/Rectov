@@ -1,19 +1,23 @@
 import pygame
 
-class TransitionSurface:
-  def __init__(self, screen, clock, fillColor):
-    self.screen = screen
-    self.clock = clock
+clock = pygame.time.Clock()
 
+class TransitionSurface:
+  def __init__(self, screen, colors):
+    # Passed attributes
+    self.screen = screen
+    self.colors = colors
+    # Class attributes
     self.transitionScreen = pygame.Surface((1280, 720))
-    self.transitionScreen.fill(fillColor)
+    # Fill transition screen
+    self.transitionScreen.fill(self.colors["background"])
 
   def fadeIn(self, backgroundFunction = None):
     alpha = 255
     self.transitionScreen.set_alpha(alpha)
     while alpha > 0:
       # Max fps
-      self.clock.tick(60)
+      clock.tick(60)
       # Skip animation when any key is pressed or quit button pressed
       events = pygame.event.get()
       for event in events:
@@ -34,7 +38,7 @@ class TransitionSurface:
     self.transitionScreen.set_alpha(alpha)
     while alpha < (255 if backgroundFunction is not None else 80):
       # Max fps
-      self.clock.tick(60)
+      clock.tick(60)
       # Skip animation when any key is pressed or quit button pressed
       events = pygame.event.get()
       for event in events:

@@ -3,15 +3,36 @@ import pygame
 from src.utils.drawText import drawText, drawTextCentered
 
 class PauseScreen:
-  def __init__(self, screen, colors, isPaused, confirmTransition, backToMainMenu):
+  def __init__(self, screen, colors, gameInformation, confirmTransition, backToMainMenu):
+    # Passed attributes
     self.screen = screen
     self.colors = colors
-    self.isPaused = isPaused
+    self.gameInformation = gameInformation
     self.confirmTransition = confirmTransition
     self.backToMainMenu = backToMainMenu
-
+    # Class attributes
     self.activeOption = 0
     self.pauseSurface = pygame.Surface((1280, 720), pygame.SRCALPHA)
+
+  def checkInput(self):
+    events = pygame.event.get()
+    for event in events:
+      if event.type == pygame.QUIT:
+        self.confirmTransition()
+        self.backToMainMenu()
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE or event.key == pygame.K_p:
+          self.gameInformation.update({ "pause": False })
+        elif event.key == pygame.K_UP and self.activeOption > 0:
+          self.activeOption -= 1
+        elif event.key == pygame.K_DOWN and self.activeOption < 1:
+          self.activeOption += 1
+        elif event.key == pygame.K_RETURN:
+          if self.activeOption == 0:
+            self.gameInformation.update({ "pause": False })
+          elif self.activeOption == 1:
+            self.confirmTransition()
+            self.backToMainMenu()
 
   def drawBackground(self):
     self.pauseSurface.fill((0, 0, 0, 200))
@@ -41,27 +62,7 @@ class PauseScreen:
       drawText(self.pauseSurface, text="RESUME", x=560, y=380, color=inactiveColor, fontSize=36)
       drawText(self.pauseSurface, text="EXIT", x=560, y=420, color=activeColor, fontSize=36)  
 
-  def checkInput(self):
-    events = pygame.event.get()
-    for event in events:
-      if event.type == pygame.QUIT:
-        self.confirmTransition()
-        self.backToMainMenu()
-      if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_ESCAPE or event.key == pygame.K_p:
-          self.isPaused[0] = False
-        elif event.key == pygame.K_UP and self.activeOption > 0:
-          self.activeOption -= 1
-        elif event.key == pygame.K_DOWN and self.activeOption < 1:
-          self.activeOption += 1
-        elif event.key == pygame.K_RETURN:
-          if self.activeOption == 0:
-            self.isPaused[0] = False
-          elif self.activeOption == 1:
-            self.confirmTransition()
-            self.backToMainMenu()
-
-  def drawPauseScreen(self):
+  def draw(self):
     self.checkInput()
     self.drawBackground()
     self.drawPauseMessage()

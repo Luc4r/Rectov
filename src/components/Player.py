@@ -1,17 +1,18 @@
 import pygame
 
-from src.utils.collideRectCircle import collideRectCircle
+from src.utils.collisions import correctRectPositionOnCollision, isRectCollisionDetected, isRectCircleCollisionDetected
 
 class Player:
-  def __init__(self, screen, walls, platforms, coins, finish, colors, playerScore):
+  def __init__(self, screen, colors, walls, platforms, coins, finish, playerInformation):
+    # Passed attributes
     self.screen = screen
     self.walls = walls
     self.platforms = platforms
     self.coins = coins
     self.finish = finish
     self.colors = colors
-    self.playerScore = playerScore
-
+    self.playerInformation = playerInformation
+    # Class attributes
     self.rect = pygame.Rect(60, 640, 30, 30)
     self.color = colors["red"]
     self.isFalling = False
@@ -39,7 +40,8 @@ class Player:
     self.checkCollision("left")
 
   def handleChangeColor(self, newColor):
-    if not self.isCollisionDetected():
+    collisionObjects = self.walls + self.platforms
+    if not isRectCollisionDetected(self.rect, collisionObjects):
       self.color = self.colors[newColor]
 
   def gravitySimulation(self):
@@ -75,42 +77,23 @@ class Player:
       self.isJumping = False
       self.velocityY = 5
 
-  def positionCheckOnCollision(self, collisionRect, moveDirection):
-    if moveDirection == "up":     # Hit the right side of object
-      self.rect.top = collisionRect.bottom
-    if moveDirection == "right":  # Hit the right side of object
-      self.rect.right = collisionRect.left
-    if moveDirection == "down":   # Hit the right side of object
-      self.rect.bottom = collisionRect.top
-    if moveDirection == "left":   # Hit the right side of object
-      self.rect.left = collisionRect.right
-
-  def isCollisionDetected(self):
-    for wall in self.walls:
-      if self.rect.colliderect(wall.rect):
-        return True
-    for platform in self.platforms:
-      if self.rect.colliderect(platform.rect):
-        return True
-    return False
-
   def checkCollision(self, moveDirection):
     for wall in self.walls:
       if self.rect.colliderect(wall.rect) and (self.color == wall.color or wall.color == self.colors["white"]):
-        self.positionCheckOnCollision(wall.rect, moveDirection)
+        self.rect = correctRectPositionOnCollision(self.rect, wall.rect, moveDirection)
         return True
     for platform in self.platforms:
       if self.rect.colliderect(platform.rect) and (self.color != platform.color or platform.color == self.colors["white"]):
-        self.positionCheckOnCollision(platform.rect, moveDirection)
+        self.rect = correctRectPositionOnCollision(self.rect, platform.rect, moveDirection)
         return True
     return False
 
   def checkCoinPickup(self):
     for coin in self.coins:
-      if collideRectCircle(self.rect, coin.position, coin.radius):
+      if isRectCircleCollisionDetected(self.rect, coin.position, coin.radius):
         indexOfPickedCoin = self.coins.index(coin)
         self.coins.pop(indexOfPickedCoin)
-        self.playerScore[0] += 100
+        self.playerInformation.update({ "score": self.playerInformation["score"] + 100 })
 
   def checkFinishCollision(self):
     if self.rect.colliderect(self.finish[0]):
@@ -118,13 +101,13 @@ class Player:
       self.hasFinished = True
       self.rect.right = self.finish[0].rect.left
 
-  def checkPlayerPosition(self):
+  def checkBorderCollision(self):
     borderX = [0, 1280]
     borderY = [0, 720]
     if self.rect.left < borderX[0] or self.rect.right > borderX[1]:
-      self.finishAnimationEnded = True
+      self.playerInformation.update({ "alive": False })
     if self.rect.top < borderY[0] or self.rect.bottom > borderY[1]:
-      self.finishAnimationEnded = True
+      self.playerInformation.update({ "alive": False })
 
   def checkInput(self):
     key = pygame.key.get_pressed()
@@ -140,12 +123,6 @@ class Player:
       self.handleChangeColor("green")
     if key[pygame.K_3]:
       self.handleChangeColor("blue")
-
-  def drawPlayer(self):
-    colorRect = pygame.Rect(self.rect.left + 2, self.rect.top + 2, self.rect.width - 4, self.rect.height - 4)
-    borderColor = [200 if value == 255 else 0 for value in self.color]
-    pygame.draw.rect(self.screen, borderColor, self.rect)
-    pygame.draw.rect(self.screen, self.color, colorRect)
 
   def animationFinish(self):
     halfOfWidthDifference = round((self.finish[0].rect.width - self.rect.width) / 2)
@@ -168,6 +145,12 @@ class Player:
     else:
       self.finishAnimationEnded = True
 
+  def draw(self):
+    colorRect = pygame.Rect(self.rect.left + 2, self.rect.top + 2, self.rect.width - 4, self.rect.height - 4)
+    borderColor = [200 if value == 255 else 0 for value in self.color]
+    pygame.draw.rect(self.screen, borderColor, self.rect)
+    pygame.draw.rect(self.screen, self.color, colorRect)
+
   def update(self):
     if not self.hasFinished:
       self.checkInput()
@@ -175,8 +158,8 @@ class Player:
         self.jumpSimulation()
       else:
         self.gravitySimulation()
-      self.checkPlayerPosition()
       self.checkCoinPickup()
+      self.checkBorderCollision()
       self.checkFinishCollision()
     else:
       self.animationFinish()
