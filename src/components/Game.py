@@ -2,7 +2,6 @@ import time
 import pygame
 
 from src.components.LoadingScreen import LoadingScreen
-from src.components.NextLevelScreen import NextLevelScreen
 from src.components.EndGameScreen import EndGameScreen
 from src.components.PauseScreen import PauseScreen
 from src.components.UserInterface import UserInterface
@@ -30,7 +29,7 @@ class Game:
       "alive": True,
       "score": 0
     }
-    self.level = levelsData[0]
+    self.level = levelsData["game"][0]
 
   def checkSpecialEvents(self):
     for event in pygame.event.get():
@@ -69,20 +68,6 @@ class Game:
       clock.tick(60)
       # Draw end game screen
       endGameScreen.draw()
-      # Update screen
-      pygame.display.update()
-
-  def nextLevelScreen(self, nextLevelIndex):
-    # Load next level data
-    self.level = levelsData[nextLevelIndex]
-    # Next level screen
-    nextLevelScreen = NextLevelScreen(self.screen, self.colors, self.playerInformation, self.transition.fadeOut, self.quitGame, self.start, "Level cleared!")
-    self.transition.fadeIn(backgroundFunction=nextLevelScreen.draw)
-    while True: 
-      # Max fps
-      clock.tick(60)
-      # Draw end game screen
-      nextLevelScreen.draw()
       # Update screen
       pygame.display.update()
 
@@ -145,8 +130,11 @@ class Game:
     self.transition.fadeOut()
     if self.playerInformation["alive"]:
       nextLevelIndex = self.level["id"] + 1
-      if len(levelsData) > nextLevelIndex:
-        self.nextLevelScreen(nextLevelIndex)
+      if len(levelsData["game"]) > nextLevelIndex:
+        # Load next level data
+        self.level = levelsData["game"][nextLevelIndex]
+        # Start new level
+        self.start()
       else:
         self.finishScreen()
     else:  
