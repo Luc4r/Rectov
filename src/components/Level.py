@@ -21,6 +21,7 @@ class Level:
     self.colors = colors
     # Class attributes
     self.levelData = getDataFromJSON("src/levels/{}.json".format(levelName))
+    self.isTurorial = "tutorial" in levelName
 
   def buildWalls(self):
     for wallData in self.levelData["walls"]:
@@ -35,22 +36,36 @@ class Level:
         self.platforms.append(platform)
 
   def buildCoins(self):
-    for coinData in self.levelData["coins"]:
-      coin = Coin(self.screen, coinData["x"], coinData["y"])
-      self.coins.append(coin)
+    if "coins" in self.levelData:
+      for coinData in self.levelData["coins"]:
+        coin = Coin(self.screen, coinData["x"], coinData["y"])
+        self.coins.append(coin)
 
   def buildEnemies(self):
-    for enemyData in self.levelData["enemies"]:
-      enemy = Enemy(self.screen, self.walls, self.platforms, self.player, self.playerInformation, self.colors, enemyData["x"], enemyData["y"])
-      self.enemies.append(enemy)
+    if "enemies" in self.levelData:
+      for enemyData in self.levelData["enemies"]:
+        enemy = Enemy(self.screen, self.walls, self.platforms, self.player, self.playerInformation, self.colors, enemyData["x"], enemyData["y"])
+        self.enemies.append(enemy)
 
   def buildFinishObject(self):
-    x = self.levelData["finish"]["x"]
-    y = self.levelData["finish"]["y"]
-    width = self.levelData["finish"]["width"]
-    height = self.levelData["finish"]["height"]
-    finish = Finish(self.screen, self.colors, x, y, width, height)  
-    self.finish.append(finish)  
+    if "finish" in self.levelData:
+      x = self.levelData["finish"]["x"]
+      y = self.levelData["finish"]["y"]
+      width = self.levelData["finish"]["width"]
+      height = self.levelData["finish"]["height"]
+      finish = Finish(self.screen, self.colors, x, y, width, height)  
+      self.finish.append(finish)  
+
+  def buildFinishBlockade(self):
+    if "finish" in self.levelData:
+      finishX = self.levelData["finish"]["x"]
+      finishY = self.levelData["finish"]["y"]
+      finishWidth = self.levelData["finish"]["width"]
+      finishHeight = self.levelData["finish"]["height"]
+      for x in range(finishX - 1, finishX + finishWidth + 1):
+        for y in range(finishY - 1, finishY + finishHeight + 1):
+          wall = Tile(self.screen, x, y, self.colors["white"])
+          self.walls.append(wall)
 
   def build(self):
     self.buildWalls()
@@ -72,4 +87,5 @@ class Level:
       coin.draw()
     for enemy in self.enemies:
       enemy.draw()
-    self.finish[0].draw()
+    for finish in self.finish:
+      finish.draw()

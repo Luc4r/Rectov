@@ -4,6 +4,7 @@ import pygame
 from src.components.Menu import Menu
 from src.components.TransitionSurface import TransitionSurface
 from src.components.Game import Game
+from src.components.Tutorial import Tutorial
 
 from src.utils.getDataFromJSON import getDataFromJSON
 
@@ -20,10 +21,11 @@ def main():
   transition = TransitionSurface(screen, colors)
   menu = Menu(screen, colors, scores)
   game = Game(screen, transition, colors, main)
+  tutorial = Tutorial(screen, transition, colors, main)
   # Transition
   transition.fadeIn(backgroundFunction=menu.draw)
   # Display menu until user selects "play game" option
-  while not menu.isGameRunning:
+  while not menu.isGameRunning and not menu.isTutorialRunning:
     # Draw menu
     menu.draw()
     # Update screen
@@ -31,7 +33,11 @@ def main():
   # Transition
   transition.fadeOut(backgroundFunction=menu.draw)
   # Initialize game
-  game.start()
+  if menu.isGameRunning:
+    game.start()
+  # Initialize tutorial
+  elif menu.isTutorialRunning:
+    tutorial.start()
 
 if __name__ == '__main__':
   main()

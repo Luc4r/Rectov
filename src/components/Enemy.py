@@ -21,9 +21,9 @@ class Enemy:
     self.mass = 1
 
   def gravitySimulation(self):
-    F = -(0.1 * self.mass * (self.velocityY ** 2))
+    F = 0.1 * self.mass * (self.velocityY ** 2)
     # Change position and velocity
-    self.rect.y -= F
+    self.rect.y += F
     self.velocityY += 0.5
     # On floor hit - set velocity to default value
     collisionObjects = self.walls + self.platforms
@@ -47,11 +47,12 @@ class Enemy:
       self.rangeColor[3] -= 2
 
   def draw(self):
+    # Reset transparent surface
     self.transparentSurface.fill((0, 0, 0, 0))
-    # RANGE:
+    # RANGE
     pygame.draw.circle(self.transparentSurface, self.rangeColor, (self.rect.left + 20, self.rect.top + 20), self.rangeRadius)
     self.screen.blit(self.transparentSurface, (0, 0))
-    # ENEMY:
+    # ENEMY
     pygame.draw.rect(self.screen, self.colors["red"], self.rect)
 
   def update(self):

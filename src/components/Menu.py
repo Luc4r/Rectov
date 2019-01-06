@@ -12,6 +12,7 @@ class Menu:
     # Class attributes
     self.activeOption = 0
     self.isGameRunning = False
+    self.isTutorialRunning = False
 
   def checkInput(self):
     events = pygame.event.get()
@@ -25,13 +26,17 @@ class Menu:
           sys.exit()
         elif event.key == pygame.K_UP and self.activeOption > 0:
           self.activeOption -= 1
-        elif event.key == pygame.K_DOWN and self.activeOption < 1:
+        elif event.key == pygame.K_DOWN and self.activeOption < 2:
           self.activeOption += 1
         elif event.key == pygame.K_RETURN:
+          # Start tutorial
           if self.activeOption == 0:
-            #START GAME
-            self.isGameRunning = True
+            self.isTutorialRunning = True
+          # Start game
           elif self.activeOption == 1:
+            self.isGameRunning = True
+          # Quit
+          elif self.activeOption == 2:
             pygame.quit()
             sys.exit()
 
@@ -45,34 +50,26 @@ class Menu:
     drawText(self.screen, text="KAROL KAPLANEK", x=960, y=690)
 
   def drawHighestScore(self):
-    if self.scores:
-      drawTextCentered(self.screen, text="Highest score:", y=600)
-      drawTextCentered(self.screen, text="{:06d} - {}".format(self.scores[0]["score"], self.scores[0]["name"]), y=630) 
-    else:
-      drawTextCentered(self.screen, text="Highest score:", y=600)
-      drawTextCentered(self.screen, text="{:06d}".format(0), y=630) 
+    drawTextCentered(self.screen, text="Highest score:", y=600)
+    drawTextCentered(self.screen, text="{:06d} - {}".format(self.scores[0]["score"], self.scores[0]["name"]) if self.scores else "{:06d}".format(0), y=630) 
 
-  def drawOptionDots(self):
-    firstDot = pygame.Rect(530, 383, 20, 20)
-    secondDot = pygame.Rect(530, 423, 20, 20)
-    if self.activeOption == 0:
-      pygame.draw.rect(self.screen, self.colors["white"], firstDot)
-      pygame.draw.rect(self.screen, self.colors["grey"], secondDot)
-    elif self.activeOption == 1:
-      pygame.draw.rect(self.screen, self.colors["grey"], firstDot)
-      pygame.draw.rect(self.screen, self.colors["white"], secondDot)
+  def drawOptionDots(self, activeColor, inactiveColor):
+    firstDot = pygame.Rect(470, 383, 20, 20)
+    secondDot = pygame.Rect(520, 423, 20, 20)
+    thirdDot = pygame.Rect(530, 463, 20, 20)
+
+    pygame.draw.rect(self.screen, activeColor if self.activeOption == 0 else inactiveColor, firstDot)
+    pygame.draw.rect(self.screen, activeColor if self.activeOption == 1 else inactiveColor, secondDot)
+    pygame.draw.rect(self.screen, activeColor if self.activeOption == 2 else inactiveColor, thirdDot)
 
   def drawOptions(self):
-    self.drawOptionDots()
     inactiveColor = self.colors["grey"]
     activeColor = self.colors["white"]
+    self.drawOptionDots(activeColor, inactiveColor)
 
-    if self.activeOption == 0:
-      drawText(self.screen, text="START", x=580, y=380, color=activeColor, fontSize=36)
-      drawText(self.screen, text="EXIT", x=580, y=420, color=inactiveColor, fontSize=36)
-    elif self.activeOption == 1:
-      drawText(self.screen, text="START", x=580, y=380, color=inactiveColor, fontSize=36)
-      drawText(self.screen, text="EXIT", x=580, y=420, color=activeColor, fontSize=36)  
+    drawTextCentered(self.screen, text="TUTORIAL", y=380, color=activeColor if self.activeOption == 0 else inactiveColor, fontSize=36)
+    drawTextCentered(self.screen, text="PLAY", y=420, color=activeColor if self.activeOption == 1 else inactiveColor, fontSize=36) 
+    drawTextCentered(self.screen, text="EXIT", y=460, color=activeColor if self.activeOption == 2 else inactiveColor, fontSize=36) 
 
   def draw(self):
     self.checkInput()

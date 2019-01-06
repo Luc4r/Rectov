@@ -96,7 +96,7 @@ class Player:
         self.playerInformation.update({ "score": self.playerInformation["score"] + 100 })
 
   def checkFinishCollision(self):
-    if self.rect.colliderect(self.finish[0]):
+    if self.finish and self.rect.colliderect(self.finish[0]):
       # Start finish level animation
       self.hasFinished = True
       self.rect.right = self.finish[0].rect.left
