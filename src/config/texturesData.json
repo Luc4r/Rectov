@@ -38,5 +38,15 @@
 			"space2-activated": 40,
 			"space3-activated": 41
 		}
+	},
+	"tiles": {
+		"width": 128,
+		"height": 128,
+		"columns": 2,
+		"rows": 1,
+		"indexes": {
+			"wall": 0,
+			"platform": 1
+		}
 	}
 }

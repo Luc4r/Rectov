@@ -14,14 +14,14 @@ def correctRectPositionOnCollision(rect, collisionRect, moveDirection):
 
 def getNewRectPropertiesOnCollision(rect, objects, moveDirection):
   for obj in objects:
-    if rect.colliderect(obj.rect):
-      newRect = correctRectPositionOnCollision(rect, obj.rect, moveDirection)
+    if rect.colliderect(obj["rect"]):
+      newRect = correctRectPositionOnCollision(rect, obj["rect"], moveDirection)
       return newRect
   return None
 
 def isRectCollisionDetected(rect, objects):
   for obj in objects:
-    if rect.colliderect(obj.rect):
+    if rect.colliderect(obj["rect"]):
       return True
   return False
 

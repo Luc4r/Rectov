@@ -3,9 +3,10 @@ import pygame
 from src.utils.collisions import correctRectPositionOnCollision, isRectCollisionDetected, isRectCircleCollisionDetected
 
 class Player:
-  def __init__(self, screen, colors, walls, platforms, coins, finish, playerInformation):
+  def __init__(self, screen, colors, solidTiles, walls, platforms, coins, finish, playerInformation):
     # Passed attributes
     self.screen = screen
+    self.solidTiles = solidTiles
     self.walls = walls
     self.platforms = platforms
     self.coins = coins
@@ -78,13 +79,17 @@ class Player:
       self.velocityY = 5
 
   def checkCollision(self, moveDirection):
+    for solidTile in self.solidTiles:
+      if self.rect.colliderect(solidTile["rect"]):
+        self.rect = correctRectPositionOnCollision(self.rect, solidTile["rect"], moveDirection)
+        return True
     for wall in self.walls:
-      if self.rect.colliderect(wall.rect) and (self.color == wall.color or wall.color == self.colors["white"]):
-        self.rect = correctRectPositionOnCollision(self.rect, wall.rect, moveDirection)
+      if self.rect.colliderect(wall["rect"]) and self.color == self.colors[wall["color"]]:
+        self.rect = correctRectPositionOnCollision(self.rect, wall["rect"], moveDirection)
         return True
     for platform in self.platforms:
-      if self.rect.colliderect(platform.rect) and (self.color != platform.color or platform.color == self.colors["white"]):
-        self.rect = correctRectPositionOnCollision(self.rect, platform.rect, moveDirection)
+      if self.rect.colliderect(platform["rect"]) and self.color != self.colors[platform["color"]]:
+        self.rect = correctRectPositionOnCollision(self.rect, platform["rect"], moveDirection)
         return True
     return False
 

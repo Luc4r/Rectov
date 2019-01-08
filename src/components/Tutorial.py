@@ -24,7 +24,7 @@ class Tutorial:
     self.colors = colors
     self.quitTutorial = quitTutorial
     # Class attributes
-    self.keysSpriteSheet = SpriteSheet(self.screen, "keys.png")
+    self.keysSpriteSheet = SpriteSheet(self.screen, self.colors, "keys.png")
     self.gameInformation = {
       "pause": False,
       "reachedEnd": False,
@@ -150,6 +150,7 @@ class Tutorial:
 
 
   def start(self):
+    solidTiles = []
     walls = []
     platforms = []
     coins = []
@@ -157,9 +158,9 @@ class Tutorial:
     finish = []
 
     pauseScreen = PauseScreen(self.screen, self.colors, self.gameInformation, self.transition.fadeOut, self.quitTutorial)
-    player = Player(self.screen, self.colors, walls, platforms, coins, finish, self.playerInformation)
-    level = Level(self.screen, self.colors, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
-    
+    player = Player(self.screen, self.colors, solidTiles, walls, platforms, coins, finish, self.playerInformation)
+    level = Level(self.screen, self.colors, solidTiles, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
+
     level.build()
 
     self.loadingScreen(level)

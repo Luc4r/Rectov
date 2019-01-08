@@ -3,9 +3,10 @@ import pygame
 from src.utils.collisions import getNewRectPropertiesOnCollision, isRectCollisionDetected, isRectCircleCollisionDetected
 
 class Enemy:
-  def __init__(self, screen, walls, platforms, player, playerInformation, colors, x, y):
+  def __init__(self, screen, solidTiles, walls, platforms, player, playerInformation, colors, x, y):
     # Passed attributes
     self.screen = screen
+    self.solidTiles = solidTiles
     self.walls = walls
     self.platforms = platforms
     self.player = player
@@ -26,7 +27,7 @@ class Enemy:
     self.rect.y += F
     self.velocityY += 0.5
     # On floor hit - set velocity to default value
-    collisionObjects = self.walls + self.platforms
+    collisionObjects = self.walls + self.platforms + self.solidTiles
     if isRectCollisionDetected(self.rect, collisionObjects):
       self.rect = getNewRectPropertiesOnCollision(self.rect, collisionObjects, "down")
       self.isFalling = False

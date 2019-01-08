@@ -83,6 +83,7 @@ class Game:
       pygame.display.update()
 
   def start(self):
+    solidTiles = []
     walls = []
     platforms = []
     coins = []
@@ -91,8 +92,8 @@ class Game:
 
     pauseScreen = PauseScreen(self.screen, self.colors, self.gameInformation, self.transition.fadeOut, self.quitGame)
     ui = UserInterface(self.screen, self.colors, self.level["name"], self.playerInformation)
-    player = Player(self.screen, self.colors, walls, platforms, coins, finish, self.playerInformation)
-    level = Level(self.screen, self.colors, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
+    player = Player(self.screen, self.colors, solidTiles, walls, platforms, coins, finish, self.playerInformation)
+    level = Level(self.screen, self.colors, solidTiles, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
     
     level.build()
 
