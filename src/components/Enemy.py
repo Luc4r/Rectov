@@ -47,14 +47,15 @@ class Enemy:
     elif rangeColor[3] - 2 > minColorAlpha:
       self.rangeColor[3] -= 2
 
-  def draw(self):
+  def draw(self, camera):
+    rectToDisplay = pygame.Rect(self.rect.x - camera.screen.x, self.rect.y - camera.screen.y, self.rect.width, self.rect.height)
     # Reset transparent surface
     self.transparentSurface.fill((0, 0, 0, 0))
     # RANGE
-    pygame.draw.circle(self.transparentSurface, self.rangeColor, (self.rect.left + 20, self.rect.top + 20), self.rangeRadius)
+    pygame.draw.circle(self.transparentSurface, self.rangeColor, (rectToDisplay.x + 20, rectToDisplay.y + 20), self.rangeRadius)
     self.screen.blit(self.transparentSurface, (0, 0))
     # ENEMY
-    pygame.draw.rect(self.screen, self.colors["red"], self.rect)
+    pygame.draw.rect(self.screen, self.colors["red"], rectToDisplay)
 
   def update(self):
     self.gravitySimulation()

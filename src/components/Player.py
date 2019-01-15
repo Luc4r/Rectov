@@ -3,7 +3,7 @@ import pygame
 from src.utils.collisions import correctRectPositionOnCollision, isRectCollisionDetected, isRectCircleCollisionDetected
 
 class Player:
-  def __init__(self, screen, colors, solidTiles, walls, platforms, coins, finish, playerInformation):
+  def __init__(self, screen, colors, solidTiles, walls, platforms, coins, finish, playerInformation, levelEndX, levelEndY):
     # Passed attributes
     self.screen = screen
     self.solidTiles = solidTiles
@@ -13,6 +13,7 @@ class Player:
     self.finish = finish
     self.colors = colors
     self.playerInformation = playerInformation
+    self.levelEnd = [levelEndX, levelEndY]
     # Class attributes
     self.rect = pygame.Rect(60, 640, 30, 30)
     self.color = colors["red"]
@@ -107,8 +108,8 @@ class Player:
       self.rect.right = self.finish[0].rect.left
 
   def checkBorderCollision(self):
-    borderX = [0, 1280]
-    borderY = [0, 720]
+    borderX = [0, self.levelEnd[0]]
+    borderY = [0, self.levelEnd[1]]
     if self.rect.left < borderX[0] or self.rect.right > borderX[1]:
       self.playerInformation.update({ "alive": False })
     if self.rect.top < borderY[0] or self.rect.bottom > borderY[1]:
@@ -150,10 +151,13 @@ class Player:
     else:
       self.finishAnimationEnded = True
 
-  def draw(self):
-    colorRect = pygame.Rect(self.rect.left + 2, self.rect.top + 2, self.rect.width - 4, self.rect.height - 4)
+  def draw(self, camera):
+    rectToDisplay = pygame.Rect(self.rect.x - camera.screen.x, self.rect.y - camera.screen.y, self.rect.width, self.rect.height)
+    # Player border
     borderColor = [200 if value == 255 else 0 for value in self.color]
-    pygame.draw.rect(self.screen, borderColor, self.rect)
+    pygame.draw.rect(self.screen, borderColor, rectToDisplay)
+    # Player
+    colorRect = pygame.Rect(rectToDisplay.left + 2, rectToDisplay.top + 2, rectToDisplay.width - 4, rectToDisplay.height - 4)
     pygame.draw.rect(self.screen, self.color, colorRect)
 
   def update(self):

@@ -8,7 +8,7 @@ from src.components.Finish import Finish
 from src.utils.getDataFromJSON import getDataFromJSON
 
 class Level:
-  def __init__(self, screen, colors, solidTiles, walls, platforms, coins, enemies, finish, player, playerInformation, levelName):
+  def __init__(self, screen, camera, colors, solidTiles, walls, platforms, coins, enemies, finish, player, playerInformation, levelName):
     # Passed attributes
     self.screen = screen
     self.solidTiles = solidTiles
@@ -19,6 +19,7 @@ class Level:
     self.finish = finish
     self.player = player
     self.playerInformation = playerInformation
+    self.camera = camera
     self.colors = colors
     # Class attributes
     self.tilesSheet = SpriteSheet(self.screen, self.colors, fileName="tiles.png", scaledSpriteWidth=40, scaledSpriteHeight=40)
@@ -92,15 +93,16 @@ class Level:
       enemy.update()
 
   def draw(self):
-    for solidTile in self.solidTiles:
-      pygame.draw.rect(self.screen, self.colors["white"], solidTile["rect"])
     for wall in self.walls:
-      self.tilesSheet.drawTextureOnRect(textureName=wall["textureName"], rect=wall["rect"], rectColor=wall["color"])
+      self.tilesSheet.drawTextureOnRect(textureName=wall["textureName"], rect=wall["rect"], rectColor=wall["color"], camera=self.camera)
     for platform in self.platforms:
-      self.tilesSheet.drawTextureOnRect(textureName=platform["textureName"], rect=platform["rect"], rectColor=platform["color"])
+      self.tilesSheet.drawTextureOnRect(textureName=platform["textureName"], rect=platform["rect"], rectColor=platform["color"], camera=self.camera)
     for coin in self.coins:
-      coin.draw()
+      coin.draw(self.camera)
     for enemy in self.enemies:
-      enemy.draw()
+      enemy.draw(self.camera)
+    for solidTile in self.solidTiles:
+      rectToDisplay = pygame.Rect(solidTile["rect"].x - self.camera.screen.x, solidTile["rect"].y - self.camera.screen.y, solidTile["rect"].width, solidTile["rect"].height)
+      pygame.draw.rect(self.screen, self.colors["white"], rectToDisplay)
     for finish in self.finish:
-      finish.draw()
+      finish.draw(self.camera)

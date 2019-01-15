@@ -32,10 +32,15 @@ class SpriteSheet:
     rectProperties = self.sprites[spriteIndex]
     return self.sheet.subsurface(pygame.Rect(rectProperties))
 
-  def drawTexture(self, textureName, x, y):
+  def drawTexture(self, textureName, x, y, camera):
     spriteIndex = texturesData[self.fileName]["indexes"][textureName]
-    self.screen.blit(self.sheet, (x, y), self.sprites[spriteIndex])
+    # blit when is in view range
+    if x + self.spriteWidth >= camera.screen.left and x <= camera.screen.right and y + self.spriteHeight >= camera.screen.top and y <= camera.screen.bottom:
+      self.screen.blit(self.sheet, (x - camera.screen.x, y - camera.screen.y), self.sprites[spriteIndex])
 
-  def drawTextureOnRect(self, textureName, rect, rectColor):
-    pygame.draw.rect(self.screen, self.colors[rectColor], rect)
-    self.drawTexture(textureName, rect.x, rect.y)
+  def drawTextureOnRect(self, textureName, rect, rectColor, camera):
+    # blit when is in view range
+    if rect.x + self.spriteWidth >= camera.screen.left and rect.x <= camera.screen.right and rect.y + self.spriteHeight >= camera.screen.top and rect.y <= camera.screen.bottom:
+      rectToDisplay = pygame.Rect(rect.x - camera.screen.x, rect.y - camera.screen.y, rect.width, rect.height)
+      pygame.draw.rect(self.screen, self.colors[rectColor], rectToDisplay)
+      self.drawTexture(textureName, rect.x, rect.y, camera)

@@ -7,6 +7,7 @@ from src.components.PauseScreen import PauseScreen
 from src.components.UserInterface import UserInterface
 from src.components.Level import Level
 from src.components.Player import Player
+from src.components.Camera import Camera
 
 from src.utils.getDataFromJSON import getDataFromJSON
 
@@ -22,14 +23,15 @@ class Game:
     self.colors = colors
     self.quitGame = quitGame
     # Class attributes
+    self.level = levelsData["game"][0] # starting level -> index 0
     self.gameInformation = {
       "pause": False
     }
     self.playerInformation = {
+      "spawn": self.level["playerSpawnPoint"],
       "alive": True,
       "score": 0
     }
-    self.level = levelsData["game"][0]
 
   def checkSpecialEvents(self):
     for event in pygame.event.get():
@@ -90,11 +92,15 @@ class Game:
     enemies = []
     finish = []
 
+    levelEndX = self.level["length"][0] * 40
+    levelEndY = self.level["length"][1] * 40
+
     pauseScreen = PauseScreen(self.screen, self.colors, self.gameInformation, self.transition.fadeOut, self.quitGame)
     ui = UserInterface(self.screen, self.colors, self.level["name"], self.playerInformation)
-    player = Player(self.screen, self.colors, solidTiles, walls, platforms, coins, finish, self.playerInformation)
-    level = Level(self.screen, self.colors, solidTiles, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
-    
+    player = Player(self.screen, self.colors, solidTiles, walls, platforms, coins, finish, self.playerInformation, levelEndX, levelEndY)
+    camera = Camera(player, levelEndX, levelEndY)
+    level = Level(self.screen, camera, self.colors, solidTiles, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
+
     level.build()
 
     self.loadingScreen(level)
@@ -113,17 +119,18 @@ class Game:
         # Draw pause screen elements
         self.screen.fill(self.colors["background"])
         level.draw()
-        player.draw()
+        player.draw(camera)
         pauseScreen.draw()
         # Update screen
         pygame.display.update()
       # Update moveable objects
       level.update()
       player.update()
+      camera.update()
       # Draw game elements
       self.screen.fill(self.colors["background"])
       level.draw()
-      player.draw()
+      player.draw(camera)
       ui.draw()
       # Update screen
       pygame.display.update()
