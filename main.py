@@ -23,20 +23,20 @@ def main():
   game = Game(screen, transition, colors, main)
   tutorial = Tutorial(screen, transition, colors, main)
   # Transition
-  transition.fadeIn(backgroundFunction=menu.draw)
+  transition.fadeIn(background_function=menu.draw)
   # Display menu until user selects "play game" option
-  while not menu.isGameRunning and not menu.isTutorialRunning:
+  while not menu.is_game_running and not menu.is_tutorial_running:
     # Draw menu
     menu.draw()
     # Update screen
     pygame.display.update()
   # Transition
-  transition.fadeOut(backgroundFunction=menu.draw)
+  transition.fadeOut(background_function=menu.draw)
   # Initialize game
-  if menu.isGameRunning:
+  if menu.is_game_running:
     game.start()
   # Initialize tutorial
-  elif menu.isTutorialRunning:
+  elif menu.is_tutorial_running:
     tutorial.start()
 
 if __name__ == '__main__':

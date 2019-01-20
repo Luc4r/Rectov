@@ -2,17 +2,16 @@ import json, operator
 
 from src.utils.getDataFromJSON import getDataFromJSON
 
-def saveResultToJSON(newResult):
+def saveResultToJSON(new_result):
   path = "src/data/scores.json"
-  scoresLimit = 1000
-
+  scores_limit = 1000
   data = getDataFromJSON("src/data/scores.json")
-  
-  newData = [newResult]
-  if data:
-    data.append(newResult)
-    dataSorted = sorted(data, key=operator.itemgetter('score'), reverse=True)
-    newData = dataSorted[:scoresLimit]
 
-  with open(path, "w") as jsonFile:
-    json.dump(newData, jsonFile)
+  data_new = [new_result]
+  if data:
+    data.append(new_result)
+    data_sorted = sorted(data, key=operator.itemgetter('score'), reverse=True)
+    data_new = data_sorted[:scores_limit]
+
+  with open(path, "w") as json_file:
+    json.dump(data_new, json_file)

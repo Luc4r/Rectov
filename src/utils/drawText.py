@@ -11,17 +11,17 @@ fonts = {
   128: pygame.font.Font("src/font/Chintzy.ttf", 128)
 }
 
-def drawText(screen, text, x, y, color=[255, 255, 255], fontSize=24):
-  textToDisplay = fonts[fontSize].render(text, 1, color)
-  screen.blit(textToDisplay, (x, y))
+def drawText(screen, text, x, y, color=[255, 255, 255], font_size=24):
+  text_to_display = fonts[font_size].render(text, 1, color)
+  screen.blit(text_to_display, (x, y))
 
-def drawTextCentered(screen, text, y, color=[255, 255, 255], fontSize=24):
-  textToDisplay = fonts[fontSize].render(text, 1, color)
-  centerX = getCenterX(textToDisplay)
-  screen.blit(textToDisplay, (centerX, y))
+def drawTextCentered(screen, text, y, color=[255, 255, 255], font_size=24):
+  text_to_display = fonts[font_size].render(text, 1, color)
+  center_x = getCenterX(text_to_display)
+  screen.blit(text_to_display, (center_x, y))
 
 def getCenterX(text):
-  screenWidth = 1280
-  textWidth = text.get_width()
-  centerX = screenWidth // 2 - textWidth // 2
-  return centerX
+  screen_width = pygame.display.Info().current_w
+  text_width = text.get_width()
+  center_x = screen_width // 2 - text_width // 2
+  return center_x

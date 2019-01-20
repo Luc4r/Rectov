@@ -1,22 +1,21 @@
 import pygame
 
-def correctRectPositionOnCollision(rect, collisionRect, moveDirection):
-  newRect = rect.copy()
-  if moveDirection == "up":     # Hit the right side of the object
-    newRect.top = collisionRect.bottom
-  if moveDirection == "right":  # Hit the right side of the object
-    newRect.right = collisionRect.left
-  if moveDirection == "down":   # Hit the right side of the object
-    newRect.bottom = collisionRect.top
-  if moveDirection == "left":   # Hit the right side of the object
-    newRect.left = collisionRect.right
-  return newRect
+def correctRectPosition(rect, collision_rect, move_direction):
+  new_rect = rect.copy()
+  if move_direction == "up":     # Hit the right side of the object
+    new_rect.top = collision_rect.bottom
+  if move_direction == "right":  # Hit the right side of the object
+    new_rect.right = collision_rect.left
+  if move_direction == "down":   # Hit the right side of the object
+    new_rect.bottom = collision_rect.top
+  if move_direction == "left":   # Hit the right side of the object
+    new_rect.left = collision_rect.right
+  return new_rect
 
-def getNewRectPropertiesOnCollision(rect, objects, moveDirection):
+def getNewRectProperties(rect, objects, move_direction):
   for obj in objects:
     if rect.colliderect(obj["rect"]):
-      newRect = correctRectPositionOnCollision(rect, obj["rect"], moveDirection)
-      return newRect
+      return correctRectPosition(rect, obj["rect"], move_direction)
   return None
 
 def isRectCollisionDetected(rect, objects):
@@ -26,15 +25,14 @@ def isRectCollisionDetected(rect, objects):
   return False
 
 def isRectCircleCollisionDetected(rect, center, r):
-  circleDistanceX = abs(center[0] - rect.centerx)
-  circleDistanceY = abs(center[1] - rect.centery)
-
-  if (circleDistanceX > rect.w / 2.0 + r) or (circleDistanceY > rect.h / 2.0 + r):
+  circle_distance_x = abs(center[0] - rect.centerx)
+  circle_distance_y = abs(center[1] - rect.centery)
+  if (circle_distance_x > rect.w / 2.0 + r) or (circle_distance_y > rect.h / 2.0 + r):
     return False
-  if (circleDistanceX <= rect.w / 2.0) or (circleDistanceY <= rect.h / 2.0):
+  if (circle_distance_x <= rect.w / 2.0) or (circle_distance_y <= rect.h / 2.0):
     return True
 
-  cornerX = circleDistanceX - rect.w / 2.0
-  cornerY = circleDistanceY - rect.h / 2.0
-  cornerDistanceSquare = cornerX ** 2.0 + cornerY ** 2.0
-  return (cornerDistanceSquare <= r ** 2.0)
+  corner_x = circle_distance_x - rect.w / 2.0
+  corner_y = circle_distance_y - rect.h / 2.0
+  corner_distance_square = corner_x ** 2.0 + corner_y ** 2.0
+  return (corner_distance_square <= r ** 2.0)

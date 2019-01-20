@@ -9,5 +9,10 @@ class Finish:
     self.rect = pygame.Rect(x * 40, y * 40, width * 40, height * 40)
     
   def draw(self, camera):
-    rectToDisplay = pygame.Rect(self.rect.x - camera.screen.x, self.rect.y - camera.screen.y, self.rect.width, self.rect.height)
-    pygame.draw.rect(self.screen, self.colors["black"], rectToDisplay)
+    rect_to_display = pygame.Rect(
+    	self.rect.x - camera.screen.x, 
+    	self.rect.y - camera.screen.y, 
+    	self.rect.width, 
+    	self.rect.height
+    )
+    pygame.draw.rect(self.screen, self.colors["black"], rect_to_display)

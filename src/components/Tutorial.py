@@ -13,31 +13,31 @@ from src.utils.drawText import drawText, drawTextCentered
 from src.utils.sleepWithDrawing import sleepWithDrawing
 from src.utils.getDataFromJSON import getDataFromJSON
 
-levelsData = getDataFromJSON("src/levels/levels-data.json")
+levels_data = getDataFromJSON("src/levels/levels-data.json")
 
 clock = pygame.time.Clock()
 
 class Tutorial:
-  def __init__(self, screen, transition, colors, quitTutorial):
+  def __init__(self, screen, transition, colors, quit_tutorial):
     # Passed attributes
     self.screen = screen
     self.transition = transition
     self.colors = colors
-    self.quitTutorial = quitTutorial
+    self.quit_tutorial = quit_tutorial
     # Class attributes
-    self.level = levelsData["tutorial"][0] # starting level -> index 0
-    self.keysSpriteSheet = SpriteSheet(self.screen, self.colors, "keys.png")
-    self.gameInformation = {
+    self.level = levels_data["tutorial"][0] # starting level -> index 0
+    self.keys_sprite_sheet = SpriteSheet(self.screen, self.colors, "keys.png")
+    self.game_info = {
       "pause": False,
       "reachedEnd": False,
       "objectivesComplete": False
     }
-    self.playerInformation = {
+    self.player_info = {
       "spawn": self.level["playerSpawnPoint"],
       "alive": True,
       "score": 0
     } 
-    self.keysPressed = {
+    self.keys_pressed = {
       "1": False,
       "2": False,
       "3": False,
@@ -48,16 +48,16 @@ class Tutorial:
     }
 
   def resetClassAttributes(self):
-    self.gameInformation.update({
+    self.game_info.update({
       "pause": False,
       "reachedEnd": False,
       "objectivesComplete": False
     })
-    self.playerInformation.update({
+    self.player_info.update({
       "alive": True,
       "score": 0
     }) 
-    self.keysPressed.update({
+    self.keys_pressed.update({
       "1": False,
       "2": False,
       "3": False,
@@ -68,112 +68,227 @@ class Tutorial:
     })
 
   def checkSpecialEvents(self):
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
       if event.type == pygame.QUIT:
         self.transition.fadeOut()
-        self.quitTutorial()
+        self.quit_tutorial()
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_1:
-          self.keysPressed.update({ "1": True })
+          self.keys_pressed.update({ "1": True })
         if event.key == pygame.K_2:
-          self.keysPressed.update({ "2": True })
+          self.keys_pressed.update({ "2": True })
         if event.key == pygame.K_3:
-          self.keysPressed.update({ "3": True })
-        if event.key == pygame.K_w or event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-          self.keysPressed.update({ "jump": True })
+          self.keys_pressed.update({ "3": True })
+        if (event.key == pygame.K_w 
+            or event.key == pygame.K_UP 
+            or event.key == pygame.K_SPACE
+        ):
+          self.keys_pressed.update({ "jump": True })
         if event.key == pygame.K_a or event.key == pygame.K_LEFT:
-          self.keysPressed.update({ "left": True })
+          self.keys_pressed.update({ "left": True })
         if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-          self.keysPressed.update({ "right": True })
+          self.keys_pressed.update({ "right": True })
         if event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
-          self.keysPressed.update({ "pause": True })
-          self.gameInformation.update({ "pause": True })
+          self.keys_pressed.update({ "pause": True })
+          self.game_info.update({ "pause": True })
 
   def checkFinishConditions(self):
     if self.level["id"] == 0:
-      if self.keysPressed["left"] and self.keysPressed["right"] and self.keysPressed["jump"] and self.keysPressed["pause"]:
-        self.gameInformation.update({ "objectivesComplete": True })
+      if (self.keys_pressed["left"] 
+          and self.keys_pressed["right"] 
+          and self.keys_pressed["jump"] 
+          and self.keys_pressed["pause"]
+      ):
+        self.game_info.update({ "objectivesComplete": True })
     elif self.level["id"] == 2:
-      if self.playerInformation["score"] > 0: # score greater than 0 means player picked up a coin
-        self.gameInformation.update({ "objectivesComplete": True })
+      if self.player_info["score"] > 0: # score greater than 0 means player picked up a coin
+        self.game_info.update({ "objectivesComplete": True })
 
-  def writeMessage(self, camera):
+  def writeMessage(self, camera): """ TODO: try to make this piece of code look better """
     # Messages for first tutorial
     if self.level["id"] == 0:
-      drawText(self.screen, text="Move:", x=120, y=100, fontSize=64)
-      self.keysSpriteSheet.drawTexture(textureName="a-activated" if self.keysPressed["left"] else "a", x=140, y=180, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="d-activated" if self.keysPressed["right"] else "d", x=224, y=180, camera=camera)
-      drawText(self.screen, text="alternative", x=90, y=250, fontSize=36)
-      self.keysSpriteSheet.drawTexture(textureName="left-activated" if self.keysPressed["left"] else "left", x=140, y=290, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="right-activated" if self.keysPressed["right"] else "right", x=224, y=290, camera=camera)
+      drawText(self.screen, text="Move:", x=120, y=100, font_size=64)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="a-activated" if self.keys_pressed["left"] else "a", 
+        x=140, 
+        y=180, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="d-activated" if self.keys_pressed["right"] else "d", 
+        x=224, 
+        y=180, 
+        camera=camera
+      )
+      drawText(self.screen, text="alternative", x=90, y=250, font_size=36)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="left-activated" if self.keys_pressed["left"] else "left", 
+        x=140, 
+        y=290, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="right-activated" if self.keys_pressed["right"] else "right", 
+        x=224, 
+        y=290, 
+        camera=camera
+      )
 
-      drawText(self.screen, text="Jump:", x=520, y=100, fontSize=64)
-      self.keysSpriteSheet.drawTexture(textureName="space1-activated" if self.keysPressed["jump"] else "space1", x=500, y=180, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="space2-activated" if self.keysPressed["jump"] else "space2", x=584, y=180, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="space3-activated" if self.keysPressed["jump"] else "space3", x=668, y=180, camera=camera)
-      drawText(self.screen, text="alternative", x=490, y=250, fontSize=36)
-      self.keysSpriteSheet.drawTexture(textureName="w-activated" if self.keysPressed["jump"] else "w", x=540, y=290, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="up-activated" if self.keysPressed["jump"] else "up", x=624, y=290, camera=camera)
+      drawText(self.screen, text="Jump:", x=520, y=100, font_size=64)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="space1-activated" if self.keys_pressed["jump"] else "space1", 
+        x=500, 
+        y=180, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="space2-activated" if self.keys_pressed["jump"] else "space2", 
+        x=584, 
+        y=180, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="space3-activated" if self.keys_pressed["jump"] else "space3", 
+        x=668, 
+        y=180, 
+        camera=camera
+      )
+      drawText(self.screen, text="alternative", x=490, y=250, font_size=36)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="w-activated" if self.keys_pressed["jump"] else "w", 
+        x=540, 
+        y=290, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="up-activated" if self.keys_pressed["jump"] else "up", 
+        x=624, 
+        y=290, 
+        camera=camera
+      )
 
-      drawText(self.screen, text="Pause:", x=920, y=100, fontSize=64)
-      self.keysSpriteSheet.drawTexture(textureName="esc-activated" if self.keysPressed["pause"] else "esc", x=1000, y=180, camera=camera)
-      drawText(self.screen, text="alternative", x=920, y=250, fontSize=36)
-      self.keysSpriteSheet.drawTexture(textureName="p-activated" if self.keysPressed["pause"] else "p", x=1000, y=290, camera=camera)
+      drawText(self.screen, text="Pause:", x=920, y=100, font_size=64)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="esc-activated" if self.keys_pressed["pause"] else "esc", 
+        x=1000, 
+        y=180, 
+        camera=camera
+      )
+      drawText(self.screen, text="alternative", x=920, y=250, font_size=36)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="p-activated" if self.keys_pressed["pause"] else "p", 
+        x=1000, 
+        y=290, 
+        camera=camera
+      )
     # Messages for second tutorial
     elif self.level["id"] == 1:
-      drawText(self.screen, text="Color change:", x=100, y=100, fontSize=64)
-      self.keysSpriteSheet.drawTexture(textureName="1-activated" if self.keysPressed["1"] else "1", x=250, y=180, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="2-activated" if self.keysPressed["2"] else "2", x=334, y=180, camera=camera)
-      self.keysSpriteSheet.drawTexture(textureName="3-activated" if self.keysPressed["3"] else "3", x=418, y=180, camera=camera)
-      drawText(self.screen, text="Finish -", x=1050, y=550, fontSize=36)
+      drawText(self.screen, text="Color change:", x=100, y=100, font_size=64)
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="1-activated" if self.keys_pressed["1"] else "1", 
+        x=250, 
+        y=180, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="2-activated" if self.keys_pressed["2"] else "2", 
+        x=334, 
+        y=180, 
+        camera=camera
+      )
+      self.keys_sprite_sheet.drawTexture(
+        texture_name="3-activated" if self.keys_pressed["3"] else "3", 
+        x=418, 
+        y=180, 
+        camera=camera
+      )
+      drawText(self.screen, text="Finish -", x=1050, y=550, font_size=36)
     # Messages for third tutorial
     elif self.level["id"] == 2:
-      drawTextCentered(self.screen, text="Reach the coin!", y=100, fontSize=64)
+      drawTextCentered(self.screen, text="Reach the coin!", y=100, font_size=64)
 
-  def loadingScreen(self, level):
-    loadingScreen = LoadingScreen(self.screen, self.colors, self.level["name"], self.playerInformation["score"])
-
-    self.transition.fadeIn(backgroundFunction=loadingScreen.draw)
+  def loading_screen(self, level):
+    loading_screen = LoadingScreen(
+      self.screen, 
+      self.colors, 
+      self.level["name"], 
+      self.player_info["score"]
+    )
+    self.transition.fadeIn(background_function=loading_screen.draw)
     # Do a one second break before transition
-    sleepWithDrawing(sleepTime=1, drawingFunction=loadingScreen.draw)
-    self.transition.fadeOut(backgroundFunction=loadingScreen.draw)
+    sleepWithDrawing(sleepTime=1, drawingFunction=loading_screen.draw)
+    self.transition.fadeOut(background_function=loading_screen.draw)
 
   def finishScreen(self):
-    self.transition.fadeIn(backgroundFunction=self.drawFinishScreen)
+    self.transition.fadeIn(background_function=self.drawFinishScreen)
     # Display finish screen for two seconds
     sleepWithDrawing(sleepTime=1, drawingFunction=self.drawFinishScreen)
-    self.transition.fadeOut(backgroundFunction=self.drawFinishScreen)
-    self.quitTutorial()
+    self.transition.fadeOut(background_function=self.drawFinishScreen)
+    self.quit_tutorial()
 
   def drawFinishScreen(self):
     self.screen.fill(self.colors["background"])
-    drawTextCentered(self.screen, text="You finished the tutorial!", y=200, fontSize=64)
-    drawTextCentered(self.screen, text="Have fun!", y=350, fontSize=36)
-
+    drawTextCentered(
+      self.screen, 
+      text="You finished the tutorial!", 
+      y=200, 
+      font_size=64
+    )
+    drawTextCentered(self.screen, text="Have fun!", y=350, font_size=36)
 
   def start(self):
-    solidTiles = []
+    solid_tiles = []
     walls = []
     platforms = []
     coins = []
     enemies = []
     finish = []
 
-    levelEndX = self.level["length"][0] * 40
-    levelEndY = self.level["length"][1] * 40
+    level_end = [self.level["length"][0] * 40, self.level["length"][1] * 40]
 
-    pauseScreen = PauseScreen(self.screen, self.colors, self.gameInformation, self.transition.fadeOut, self.quitTutorial)
-    player = Player(self.screen, self.colors, solidTiles, walls, platforms, coins, finish, self.playerInformation, levelEndX, levelEndY)
-    camera = Camera(player, levelEndX, levelEndY)
-    level = Level(self.screen, camera, self.colors, solidTiles, walls, platforms, coins, enemies, finish, player, self.playerInformation, self.level["dataFileName"])
+    pause_screen = PauseScreen(
+      self.screen, 
+      self.colors, 
+      self.game_info, 
+      self.transition.fadeOut, 
+      self.quit_tutorial
+    )
+    player = Player(
+      self.screen, 
+      self.colors, 
+      solid_tiles, 
+      walls, 
+      platforms, 
+      coins, 
+      finish, 
+      self.player_info, 
+      level_end
+    )
+    camera = Camera(player, level_end)
+    level = Level(
+      self.screen, 
+      self.colors, 
+      camera,
+      solid_tiles, 
+      walls, 
+      platforms, 
+      coins, 
+      enemies, 
+      finish, 
+      player, 
+      self.player_info, 
+      self.level["dataFileName"]
+    )
 
     level.build()
+    self.loading_screen(level)
+    self.transition.fadeIn(background_function=level.draw)
 
-    self.loadingScreen(level)
-
-    self.transition.fadeIn(backgroundFunction=level.draw)
-
-    while self.playerInformation["alive"] and not self.gameInformation["objectivesComplete"] and not player.finishAnimationEnded:
+    while (self.player_info["alive"] 
+          and not self.game_info["objectivesComplete"] 
+          and not player.finish_animation_ended
+    ):
       # Max fps
       clock.tick(60)
       # Check if any special keys are pressed
@@ -181,7 +296,7 @@ class Tutorial:
       # Check if user fulfilled finish conditions
       self.checkFinishConditions()
       # Check if game is paused
-      while self.gameInformation["pause"]:
+      while self.game_info["pause"]:
         # Max fps
         clock.tick(60)
         # Draw pause screen elements
@@ -189,7 +304,7 @@ class Tutorial:
         self.writeMessage(camera)
         level.draw()
         player.draw(camera)
-        pauseScreen.draw()
+        pause_screen.draw()
         # Update screen
         pygame.display.update()
       # Update moveable objects
@@ -204,12 +319,12 @@ class Tutorial:
       pygame.display.update()
 
     self.transition.fadeOut()
-    # Player has not died
-    if self.playerInformation["alive"]:
-      nextLevelIndex = self.level["id"] + 1
-      # There is another tutorial level
-      if len(levelsData["tutorial"]) > nextLevelIndex:
-        self.level = levelsData["tutorial"][nextLevelIndex]
+    # Player has finished (is alive) - go to next level or display finish screen
+    if self.player_info["alive"]:
+      next_level_id = self.level["id"] + 1
+      # Check if there is another level
+      if len(levels_data["tutorial"]) > next_level_id:
+        self.level = levels_data["tutorial"][next_level_id]
         self.resetClassAttributes()
         self.start()
       # That was the last level
