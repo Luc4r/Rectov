@@ -10,6 +10,7 @@ from src.components.Player import Player
 from src.components.Camera import Camera
 
 from src.utils.getDataFromJSON import getDataFromJSON
+from src.utils.sleepWithDrawing import sleepWithDrawing
 
 levels_data = getDataFromJSON("src/levels/levels-data.json")
 clock = pygame.time.Clock()
@@ -42,7 +43,7 @@ class Game:
         if event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
           self.game_info.update({ "pause": True })
 
-  def loadingScreen(self, level):
+  def loadingLevelScreen(self, level):
     loading_screen = LoadingScreen(
       self.screen, 
       self.colors, 
@@ -51,19 +52,7 @@ class Game:
     )
     self.transition.fadeIn(background_function=loading_screen.draw)
     # Do a one second break before transition
-    time_end = time.time() + 1
-    while time.time() < time_end:
-      # Max fps
-      clock.tick(60)
-      # Skip animation when any key is pressed or quit button pressed
-      events = pygame.event.get()
-      for event in events:
-        if event.type == pygame.KEYDOWN or event.type == pygame.QUIT:
-          return
-      # Draw loading screen (coin animation)
-      loading_screen.draw()
-      # Update screen
-      pygame.display.update()
+    sleepWithDrawing(sleep_time=1, drawing_function=loading_screen.draw)
     self.transition.fadeOut(background_function=loading_screen.draw)
 
   def endGameScreen(self, end_message):
@@ -135,7 +124,7 @@ class Game:
     )
 
     level.build()
-    self.loadingScreen(level)
+    self.loadingLevelScreen(level)
     self.transition.fadeIn(background_function=level.draw)
 
     while self.player_info["alive"] and not player.finish_animation_ended:

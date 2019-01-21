@@ -122,10 +122,10 @@ class Player:
         self.player_info.update({ "score": self.player_info["score"] + 100 })
 
   def checkFinishCollision(self):
-    if self.finish and self.rect.colliderect(self.finish[0]):
+    if self.finish and self.rect.colliderect(self.finish[0]["rect"]):
       # Start finish level animation
       self.has_finished = True
-      self.rect.right = self.finish[0].rect.left
+      self.rect.right = self.finish[0]["rect"].left
 
   def checkBorderCollision(self):
     border_x = [0, self.level_end[0]]
@@ -152,21 +152,21 @@ class Player:
 
   def animationFinish(self):
     half_of_width_difference = round(
-      (self.finish[0].rect.width - self.rect.width) / 2
+      (self.finish[0]["rect"].width - self.rect.width) / 2
     )
     finish_center_y = round(
-      self.finish[0].rect.top + self.finish[0].rect.height / 2
+      self.finish[0]["rect"].top + self.finish[0]["rect"].height / 2
     )
     player_center_y = round(
       self.rect.top + (self.rect.height / 2)
     )
     # Make sure that player is on the ground
-    if (self.rect.bottom < self.finish[0].rect.bottom 
-        and self.rect.right <= self.finish[0].rect.left
+    if (self.rect.bottom < self.finish[0]["rect"].bottom 
+        and self.rect.right <= self.finish[0]["rect"].left
     ):
       self.gravitySimulation()
     # Horizontal animation
-    elif self.rect.left - self.finish[0].rect.left < half_of_width_difference:
+    elif self.rect.left - self.finish[0]["rect"].left < half_of_width_difference:
       self.rect.left += 2
     # Vertical animation and size change
     elif player_center_y > finish_center_y:

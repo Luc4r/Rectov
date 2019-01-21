@@ -54,7 +54,7 @@ class EndGameScreen:
       self.screen, 
       text=self.end_game_message, 
       y=200, 
-      font_size=96
+      font_size=128
     )
 
   def drawPlayerScore(self):

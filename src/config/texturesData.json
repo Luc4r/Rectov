@@ -42,11 +42,12 @@
 	"tiles": {
 		"width": 128,
 		"height": 128,
-		"columns": 2,
+		"columns": 3,
 		"rows": 1,
 		"indexes": {
 			"wall": 0,
-			"platform": 1
+			"platform": 1,
+			"finish": 2
 		}
 	}
 }

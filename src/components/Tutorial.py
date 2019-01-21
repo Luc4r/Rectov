@@ -105,10 +105,11 @@ class Tutorial:
       if self.player_info["score"] > 0: # score greater than 0 means player picked up a coin
         self.game_info.update({ "objectivesComplete": True })
 
-  def writeMessage(self, camera): """ TODO: try to make this piece of code look better """
+  def writeMessage(self, camera): 
+    """ TODO: try to make this piece of code look better """
     # Messages for first tutorial
     if self.level["id"] == 0:
-      drawText(self.screen, text="Move:", x=120, y=100, font_size=64)
+      drawText(self.screen, text="Move:", x=140, y=100, font_size=64)
       self.keys_sprite_sheet.drawTexture(
         texture_name="a-activated" if self.keys_pressed["left"] else "a", 
         x=140, 
@@ -121,7 +122,7 @@ class Tutorial:
         y=180, 
         camera=camera
       )
-      drawText(self.screen, text="alternative", x=90, y=250, font_size=36)
+      drawText(self.screen, text="alternative", x=120, y=250, font_size=36)
       self.keys_sprite_sheet.drawTexture(
         texture_name="left-activated" if self.keys_pressed["left"] else "left", 
         x=140, 
@@ -135,7 +136,7 @@ class Tutorial:
         camera=camera
       )
 
-      drawText(self.screen, text="Jump:", x=520, y=100, font_size=64)
+      drawText(self.screen, text="Jump:", x=540, y=100, font_size=64)
       self.keys_sprite_sheet.drawTexture(
         texture_name="space1-activated" if self.keys_pressed["jump"] else "space1", 
         x=500, 
@@ -154,7 +155,7 @@ class Tutorial:
         y=180, 
         camera=camera
       )
-      drawText(self.screen, text="alternative", x=490, y=250, font_size=36)
+      drawText(self.screen, text="alternative", x=520, y=250, font_size=36)
       self.keys_sprite_sheet.drawTexture(
         texture_name="w-activated" if self.keys_pressed["jump"] else "w", 
         x=540, 
@@ -168,14 +169,14 @@ class Tutorial:
         camera=camera
       )
 
-      drawText(self.screen, text="Pause:", x=920, y=100, font_size=64)
+      drawText(self.screen, text="Pause:", x=950, y=100, font_size=64)
       self.keys_sprite_sheet.drawTexture(
         texture_name="esc-activated" if self.keys_pressed["pause"] else "esc", 
         x=1000, 
         y=180, 
         camera=camera
       )
-      drawText(self.screen, text="alternative", x=920, y=250, font_size=36)
+      drawText(self.screen, text="alternative", x=940, y=250, font_size=36)
       self.keys_sprite_sheet.drawTexture(
         texture_name="p-activated" if self.keys_pressed["pause"] else "p", 
         x=1000, 
@@ -184,7 +185,7 @@ class Tutorial:
       )
     # Messages for second tutorial
     elif self.level["id"] == 1:
-      drawText(self.screen, text="Color change:", x=100, y=100, font_size=64)
+      drawText(self.screen, text="Color change:", x=160, y=100, font_size=64)
       self.keys_sprite_sheet.drawTexture(
         texture_name="1-activated" if self.keys_pressed["1"] else "1", 
         x=250, 
@@ -203,12 +204,12 @@ class Tutorial:
         y=180, 
         camera=camera
       )
-      drawText(self.screen, text="Finish -", x=1050, y=550, font_size=36)
+      drawText(self.screen, text="Finish -", x=1090, y=550, font_size=36)
     # Messages for third tutorial
     elif self.level["id"] == 2:
       drawTextCentered(self.screen, text="Reach the coin!", y=100, font_size=64)
 
-  def loading_screen(self, level):
+  def loadingLevelScreen(self, level):
     loading_screen = LoadingScreen(
       self.screen, 
       self.colors, 
@@ -217,13 +218,13 @@ class Tutorial:
     )
     self.transition.fadeIn(background_function=loading_screen.draw)
     # Do a one second break before transition
-    sleepWithDrawing(sleepTime=1, drawingFunction=loading_screen.draw)
+    sleepWithDrawing(sleep_time=1, drawing_function=loading_screen.draw)
     self.transition.fadeOut(background_function=loading_screen.draw)
 
   def finishScreen(self):
     self.transition.fadeIn(background_function=self.drawFinishScreen)
     # Display finish screen for two seconds
-    sleepWithDrawing(sleepTime=1, drawingFunction=self.drawFinishScreen)
+    sleepWithDrawing(sleep_time=1, drawing_function=self.drawFinishScreen)
     self.transition.fadeOut(background_function=self.drawFinishScreen)
     self.quit_tutorial()
 
@@ -282,7 +283,7 @@ class Tutorial:
     )
 
     level.build()
-    self.loading_screen(level)
+    self.loadingLevelScreen(level)
     self.transition.fadeIn(background_function=level.draw)
 
     while (self.player_info["alive"] 

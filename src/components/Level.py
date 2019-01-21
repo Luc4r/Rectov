@@ -86,12 +86,18 @@ class Level:
       self.enemies.append(enemy)
 
   def buildFinishObject(self):
-    x = self.level_data["finish"]["x"]
-    y = self.level_data["finish"]["y"]
     width = self.level_data["finish"]["width"]
     height = self.level_data["finish"]["height"]
-    finish = Finish(self.screen, self.colors, x, y, width, height)  
-    self.finish.append(finish)  
+    x = self.level_data["finish"]["x"] * 40
+    y = self.level_data["finish"]["y"] * 40
+    finish_object = {
+      "x": x,
+      "y": y,
+      "width": width,
+      "height": height,
+      "rect": pygame.Rect(x, y, width * 40, height * 40)
+    }
+    self.finish.append(finish_object)  
 
   def build(self):
     if "solidTiles" in self.level_data:
@@ -128,6 +134,15 @@ class Level:
         rect_color=platform["color"], 
         camera=self.camera
       )
+    for finish in self.finish:
+      for w in range(finish["width"]):
+        for h in range(finish["height"]):
+          self.tiles_sheet.drawTexture(
+            texture_name="finish", 
+            x=finish["x"] + w * 40,
+            y=finish["y"] + h * 40,
+            camera=self.camera
+          )
     for coin in self.coins:
       coin.draw(self.camera)
     for enemy in self.enemies:
@@ -140,5 +155,3 @@ class Level:
         solid_tile["rect"].height
       )
       pygame.draw.rect(self.screen, self.colors["white"], rect_to_display)
-    for finish in self.finish:
-      finish.draw(self.camera)

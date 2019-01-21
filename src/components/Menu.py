@@ -44,10 +44,10 @@ class Menu:
     self.screen.fill(self.colors["background"])
 
   def drawLogo(self):
-    drawTextCentered(self.screen, text="Rectov", y=120, font_size=128)
+    drawTextCentered(self.screen, text="Rectov", y=100, font_size=256)
 
   def drawAuthor(self):
-    drawText(self.screen, text="KAROL KAPLANEK", x=960, y=690)
+    drawText(self.screen, text='KAROL "Luc4r" KAPLANEK', x=900, y=690)
 
   def drawHighestScore(self):
     drawTextCentered(self.screen, text="Highest score:", y=600)
@@ -60,9 +60,9 @@ class Menu:
     ) 
 
   def drawOptionDots(self, active_color, inactive_color):
-    first_dot = pygame.Rect(470, 383, 20, 20)
-    second_dot = pygame.Rect(520, 423, 20, 20)
-    third_dot = pygame.Rect(530, 463, 20, 20)
+    first_dot = pygame.Rect(430, 395, 20, 20)
+    second_dot = pygame.Rect(500, 455, 20, 20)
+    third_dot = pygame.Rect(510, 515, 20, 20)
     pygame.draw.rect(
       self.screen, 
       active_color if self.active_option == 0 else inactive_color, 
@@ -88,21 +88,21 @@ class Menu:
       text="TUTORIAL", 
       y=380, 
       color=active_color if self.active_option == 0 else inactive_color, 
-      font_size=36
+      font_size=64
     )
     drawTextCentered(
       self.screen, 
       text="PLAY", 
-      y=420, 
+      y=440, 
       color=active_color if self.active_option == 1 else inactive_color, 
-      font_size=36
+      font_size=64
     ) 
     drawTextCentered(
       self.screen, 
       text="EXIT", 
-      y=460, 
+      y=500, 
       color=active_color if self.active_option == 2 else inactive_color, 
-      font_size=36
+      font_size=64
     ) 
 
   def draw(self):

@@ -8,7 +8,8 @@ fonts = {
   36: pygame.font.Font("src/font/Chintzy.ttf", 36),
   64: pygame.font.Font("src/font/Chintzy.ttf", 64),
   96: pygame.font.Font("src/font/Chintzy.ttf", 96),
-  128: pygame.font.Font("src/font/Chintzy.ttf", 128)
+  128: pygame.font.Font("src/font/Chintzy.ttf", 128),
+  256: pygame.font.Font("src/font/Chintzy.ttf", 256)
 }
 
 def drawText(screen, text, x, y, color=[255, 255, 255], font_size=24):
