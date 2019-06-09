@@ -26,7 +26,7 @@ IF "%helper%" == "" (
 	GOTO END
 )
 :: check python version
-CALL SET python_version=%%helper:Python =% %%%
+CALL SET python_version=%helper:Python =%
 SET python_version_int=%python_version:.=%
 SET python_version_min_int=%python_version_min:.=%
 IF %python_version_int% LSS %python_version_min_int% (
@@ -46,13 +46,13 @@ ECHO %helper% | FINDSTR /C:"pygame==" || (
 	FOR /F "tokens=* USEBACKQ" %%G IN (`"py -m pip freeze | findstr pygame"`) DO (SET helper=%%G)
 )
 :: check pygame version
-CALL SET pygame_version=%%helper:pygame===% %%%
+CALL SET pygame_version_with_equals=%helper:pygame=%
+SET pygame_version=%pygame_version_with_equals:~2%
 SET pygame_version_int=%pygame_version:.=%
 SET pygame_version_min_int=%pygame_version_min:.=%
 IF %pygame_version_int% LSS %pygame_version_min_int% (
 	ECHO %error_wrong_pygame_version% (have %pygame_version%, minimal %pygame_version_min%^)
 	py -m pip install --upgrade pygame
-	:: no need in updating helper and checking it again - version after upgrade must be >= 1.9.4
 )
 ECHO Everything should be fine! Have fun! %ECHO_NL%
 
