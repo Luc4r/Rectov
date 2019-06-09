@@ -1,0 +1,41 @@
+{
+  "tutorial": [
+    {
+      "id": 0,
+      "name": "1 - Basic controls",
+      "dataFileName": "tutorial-1",
+      "length": [32, 18],
+      "playerSpawnPoint": [2, 16]
+    },
+    {
+      "id": 1,
+      "name": "2 - Special ability",
+      "dataFileName": "tutorial-2",
+      "length": [32, 18],
+      "playerSpawnPoint": [2, 16]
+    },
+    {
+      "id": 2,
+      "name": "3 - Game objects",
+      "dataFileName": "tutorial-3",
+      "length": [32, 18],
+      "playerSpawnPoint": [2, 16]
+    }
+  ],
+  "game": [
+    {
+      "id": 0,
+      "name": "1 - Watch out",
+      "dataFileName": "lvl-1",
+      "length": [50, 18],
+      "playerSpawnPoint": [2, 16]
+    },
+    {
+      "id": 1,
+      "name": "2 - The greed",
+      "dataFileName": "lvl-2",
+      "length": [32, 18],
+      "playerSpawnPoint": [2, 16]
+    }
+  ]
+}
